@@ -1,36 +1,44 @@
-<div>
-  <label>Name</label>
-  <input type="text" name="name" value="<%= plant.name %>" />
+<div class="form-row">
+  <div>
+    <label>Name</label>
+    <input type="text" name="name" value="<%= plant.name %>" />
+  </div>
+  <div>
+    <label>Latin Name</label>
+    <input type="text" name="latinName" value="<%= plant.latinName %>" />
+  </div>
 </div>
-<div>
-  <label>Latin Name</label>
-  <input type="text" name="latinName" value="<%= plant.latinName %>" />
-</div>
-<%- include("_plantFamilies.ejs")%>
-<div>
-  <label>Author</label>
-  <select name="author">
-    <% authors.forEach(author => { %> <% if (author.id == plant.author){ %>
-    <option selected label="<%= author.name %>" value="<%= author.id %>"></option>
-    <% } else { %>
+<div class="form-row">
+  <%- include("_plantFamilies.ejs")%>
+  <div>
+    <label>Author</label>
+    <select name="author">
+      <% authors.forEach(author => { %> <% if (author.id == plant.author){ %>
+      <option selected label="<%= author.name %>" value="<%= author.id %>"></option>
+      <% } else { %>
 
-    <option label="<%= author.name %>" value="<%= author.id %>"></option>
-    <%}%> <% }) %>
-  </select>
+      <option label="<%= author.name %>" value="<%= author.id %>"></option>
+      <%}%> <% }) %>
+    </select>
+  </div>
 </div>
-<div>
-  <label>Planted Date</label>
-  <input
-    type="date"
-    name="plantedDate"
-    value="<%= plant.plantedDate == null ? '' : plant.plantedDate.toISOString().split('T')[0] %>"
-  />
+<div class="form-row">
+  <div>
+    <label>Planted Date</label>
+    <input
+      type="date"
+      name="plantedDate"
+      value="<%= plant.plantedDate == null ? '' : plant.plantedDate.toISOString().split('T')[0] %>"
+    />
+  </div>
 </div>
-<div>
+<div class="filepond-container">
   <label>Picture</label>
-  <input type="file" name="cover" class="filepond" />
+  <input type="file" name="cover" class="filepond" id="filepond" />
 </div>
-<div>
-  <label>Description</label>
-  <textarea name="description"><%= plant.description%></textarea>
+<div class="form-row textfields">
+  <div>
+    <label>Description</label>
+    <textarea name="description"><%= plant.description%></textarea>
+  </div>
 </div>

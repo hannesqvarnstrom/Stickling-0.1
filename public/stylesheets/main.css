@@ -13,7 +13,6 @@
 *::after {
   box-sizing: border-box;
 }
-
 body {
   background: linear-gradient(
     to right,
@@ -21,17 +20,117 @@ body {
     var(--color-background-light)
   );
 }
-
+form {
+  font-size: 20px;
+}
+[action="/plants"][method="POST"] {
+  position: relative;
+}
+textarea {
+  border-radius: 20px;
+  height: 150px;
+}
+.filepond-container {
+  /* margin-left: 100%; */
+  position: absolute;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+}
+.filepond-container label {
+  text-align: center;
+}
+#filepond {
+  height: 300px;
+  width: 200px;
+  display: inline-block;
+}
 .container {
   max-width: 1200px;
-  margin: auto;
+  margin: 0 auto;
   margin-bottom: 3rem;
 }
 .inner-container {
-  margin: 0 2rem;
+  /* text-align: center; */
+  width: 60%;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr auto;
+  margin: 0 auto;
 }
-
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr;
+  margin-bottom: 5px;
+}
+.form-row.textfields {
+  background-color: transparent;
+}
+.form-row > div {
+  padding-left: 10px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 5px;
+}
+.form-row > div:first-child {
+  padding-left: 0px;
+}
+.form-row label,
+.form-row input,
+.form-row select {
+  min-width: 80%;
+}
+.form-row label {
+  padding: 5px;
+  padding-left: 10px;
+  background-color: var(--color-background-light);
+  border-radius: 20px;
+}
+.form-row input,
+.form-row select {
+  border-radius: 20px;
+  border: 1px solid black;
+  font-size: inherit;
+}
+.form-row.new-author {
+  width: 50%;
+  grid-template-columns: 1fr 2fr;
+}
 .page-header {
   font-size: 2rem;
   font-weight: 500;
+}
+.search-result-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-rows: auto;
+  column-gap: 10px;
+  row-gap: 10px;
+}
+.search-result-container a {
+  color: var(--color-btn-primary-text);
+}
+.card {
+  background-color: var(--color-background-light);
+  padding: 5px;
+  border-radius: 20px;
+  box-shadow: 3px 3px 10px rgb(27, 27, 27);
+  margin: 10px 10px 0 0;
+}
+.card p {
+  font-size: 26px;
+  margin: 0;
+  padding: 5px;
+}
+.thumbnail {
+  margin: 0 auto;
+  display: block;
+  border-radius: 10px;
+}
+
+.card a {
+  color: black;
+  font-weight: 600;
+  padding: 5px;
 }
