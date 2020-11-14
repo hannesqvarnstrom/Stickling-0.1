@@ -47,7 +47,12 @@ router.post("/", async (req, res) => {
     // coverImageName: fileName,
     description: req.body.description,
   });
-  saveCover(plant, req.body.cover);
+
+  //DETTA BREAKAR! COVER ÄR INTE REQUIRED I MODELS, GÖR TILL REQUIRED? ELLER FIXA CATCHES PÅ NÅGOT SÄTT
+  if (req.body.cover != null && req.body.cover !== "") {
+    saveCover(plant, req.body.cover);
+  }
+
   try {
     const newPlant = await plant.save();
     res.redirect(`plants/${newPlant.id}`);
@@ -122,7 +127,10 @@ router.delete("/:id", async (req, res) => {
 });
 
 function saveCover(plant, coverEncoded) {
-  if (coverEncoded == null) return;
+  // console.log(coverEncoded);
+  if (coverEncoded == null) {
+    return;
+  }
   const cover = JSON.parse(coverEncoded);
   if (cover != null && imageMimeTypes.includes(cover.type)) {
     plant.coverImage = new Buffer.from(cover.data, "base64");
