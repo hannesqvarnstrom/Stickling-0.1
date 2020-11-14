@@ -3,6 +3,7 @@ const router = express.Router();
 const Plant = require("../models/plant"); //
 const Author = require("../models/author");
 const imageMimeTypes = ["image/jpeg", "image/png", "image/gif"];
+// const plantFamilies = require("/views/plants/_plantFamilies.ejs");
 
 //all Plants route
 router.get("/", async (req, res) => {
@@ -19,17 +20,28 @@ router.get("/", async (req, res) => {
     //REMOVE OR KEEP?! I DONT KNOW!!!!
     query = query.gte("publishDate", req.query.publishedAfter);
   }
+  if (req.query.latinName != null && req.query.latinName !== "") {
+    query = query.regex("latinName", new RegExp(req.query.latinName, "i"));
+  }
+  if (req.query.family != null && req.query.family !== "") {
+    query = query.regex("family", new RegExp(req.query.family, "i"));
+  }
   try {
     const plants = await query.exec();
     res.render("plants/index", {
       plants: plants,
       searchOptions: req.query,
+      // plantFamilies: plantFamilies,
     });
   } catch {
     res.redirect("/");
   }
 });
 
+//get family by query route
+// router.get("/:family", async (req, res) => {
+
+// });
 //new plant route
 router.get("/new", async (req, res) => {
   renderNewPage(res, new Plant());
@@ -47,8 +59,7 @@ router.post("/", async (req, res) => {
     // coverImageName: fileName,
     description: req.body.description,
   });
-
-  //DETTA BREAKAR! COVER ÄR INTE REQUIRED I MODELS, GÖR TILL REQUIRED? ELLER FIXA CATCHES PÅ NÅGOT SÄTT
+  let defaultCover = ""; //set this to an encoded image to be default image
   if (req.body.cover != null && req.body.cover !== "") {
     saveCover(plant, req.body.cover);
   }
