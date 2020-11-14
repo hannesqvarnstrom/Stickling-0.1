@@ -8,7 +8,7 @@
       rel="stylesheet"
     />
     <link href="https://unpkg.com/filepond/dist/filepond.css" rel="stylesheet" />
-    <title>Hannes' App!</title>
+    <title>PlantPals</title>
     <script
       defer
       src="https://unpkg.com/filepond-plugin-image-resize/dist/filepond-plugin-image-resize.js"
@@ -23,11 +23,14 @@
     ></script>
     <script defer src="https://unpkg.com/filepond/dist/filepond.js"></script>
     <script defer src="/javascripts/fileUpload.js"></script>
+    <link rel="stylesheet" href="/stylesheets/main.css" />
   </head>
   <body>
-    <br />
-    <%- include('../partials/header.ejs') %> <%- body %> <%-
-    include('../partials/errorMessage.ejs') %>
-    <br />
+    <div class="container">
+      <%- include('../partials/header.ejs') %>
+      <main class="inner-container">
+        <%- include('../partials/errorMessage.ejs') %><%- body %>
+      </main>
+    </div>
   </body>
 </html>
