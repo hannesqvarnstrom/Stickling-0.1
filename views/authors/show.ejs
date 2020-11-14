@@ -5,9 +5,9 @@
 (booksByAuthor.length > 0) { %>
 <div>
   <h2>Books by author</h2>
-  <% booksByAuthor.forEach(book => {%>
-  <a href="/books/<%=book.id%>">
-    <img height="150" width="100" src="<%=book.coverImagePath %>" />
+  <% plantsByAuthor.forEach(plant => {%>
+  <a href="/plants/<%=plant.id%>">
+    <img height="150" width="100" src="<%=plant.coverImagePath %>" />
   </a>
 </div>
 <%})%> <%}%>

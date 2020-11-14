@@ -1,19 +1,22 @@
 const mongoose = require("mongoose");
 
-const bookSchema = new mongoose.Schema({
-  title: {
+const plantSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true,
+  },
+  latinName: {
+    type: String,
+  },
+  family: {
     type: String,
     required: true,
   },
   description: {
     type: String,
   },
-  publishDate: {
+  plantedDate: {
     type: Date,
-    required: true,
-  },
-  pageCount: {
-    type: Number,
     required: true,
   },
   createdAt: {
@@ -36,7 +39,7 @@ const bookSchema = new mongoose.Schema({
   },
 });
 
-bookSchema.virtual("coverImagePath").get(function () {
+plantSchema.virtual("coverImagePath").get(function () {
   if (this.coverImage != null && this.coverImageType != null) {
     return `data:${this.coverImageType};charset=utf-8;base64,${this.coverImage.toString(
       "base64"
@@ -45,4 +48,4 @@ bookSchema.virtual("coverImagePath").get(function () {
   }
 });
 
-module.exports = mongoose.model("Book", bookSchema);
+module.exports = mongoose.model("Plant", plantSchema);

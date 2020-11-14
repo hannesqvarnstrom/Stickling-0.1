@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const Book = require("./book");
+const Plant = require("./plant");
 const authorSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -8,11 +8,11 @@ const authorSchema = new mongoose.Schema({
 });
 
 authorSchema.pre("remove", function (next) {
-  Book.find({ author: this.id }, (err, books) => {
+  Plant.find({ author: this.id }, (err, plants) => {
     if (err) {
       next(err);
-    } else if (books.length > 0) {
-      next(new Error("This author has books still!"));
+    } else if (plants.length > 0) {
+      next(new Error("This author has plants still!"));
     } else {
       next();
     }

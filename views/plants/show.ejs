@@ -1,0 +1,11 @@
+<h2 class="page-header"><%= plant.name %></h2>
+<h2 class="page-header"><%= plant.latinName %></h2>
+<h2 class="page-header"><%= plant.family %></h2>
+<img width="100" height="150" src="<%= plant.coverImagePath%>" />
+<div>Author: <%= plant.author.name %></div>
+<div>Planted Date: <%= plant.plantedDate.toDateString()%></div>
+<div>Description: <%= plant.description %></div>
+
+<a href="/plants/<%= plant.id %>/edit">Edit</a>
+<a href="/authors/<%= plant.author.id %>">View Author</a>
+<%- include('../partials/deleteForm', {url: `/plants/${plant.id}`}) %>
