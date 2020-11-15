@@ -1,11 +1,31 @@
-<h2 class="page-header"><%= plant.name %></h2>
-<h2 class="page-header"><%= plant.latinName %></h2>
-<h2 class="page-header"><%= plant.family %></h2>
-<img width="100" height="150" src="<%= plant.coverImagePath%>" />
-<div>Author: <%= plant.author.name %></div>
-<div>Planted Date: <%= plant.plantedDate.toDateString()%></div>
-<div>Description: <%= plant.description %></div>
+<table class="table-show-plant">
+  <tr>
+    <th>Name:</th>
+    <td><%= plant.name %></td>
+  </tr>
+  <tr>
+    <th>Scientific Name:</th>
+    <td><%= plant.latinName %></td>
+  </tr>
+  <tr>
+    <th>Taxonomic Family:</th>
+    <td><%= plant.family %></td>
+  </tr>
+  <img width="100" height="150" src="<%= plant.coverImagePath%>" />
+  <tr>
+    <th>Author:</th>
+    <td><%= plant.author.name %></td>
+  </tr>
+  <tr>
+    <th>Planted Date:</th>
+    <td><%= plant.plantedDate.toDateString()%></td>
+  </tr>
+  <div>Description: <%= plant.description %></div>
+</table>
+<br />
 
-<a href="/plants/<%= plant.id %>/edit">Edit</a>
-<a href="/authors/<%= plant.author.id %>">View Author</a>
-<%- include('../partials/deleteForm', {url: `/plants/${plant.id}`}) %>
+<div class="button-container">
+  <a class="btn btn-primary" href="/plants/<%= plant.id %>/edit">Edit</a>
+  <a class="btn btn-primary" href="/authors/<%= plant.author.id %>">View Author</a>
+  <%- include('../partials/deleteForm', {url: `/plants/${plant.id}`}) %>
+</div>

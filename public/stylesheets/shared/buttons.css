@@ -32,7 +32,9 @@
 .btn-row > *:first-child {
   margin-left: 0;
 }
-
+.btn-row > .btn.btn-primary {
+  color: var(--color-btn-primary-text);
+}
 .btn-primary {
   color: var(--color-btn-primary-text);
   background-color: var(--color-btn-primary-background);
