@@ -59,6 +59,10 @@ router.post("/", async (req, res) => {
     // coverImageName: fileName,
     description: req.body.description,
   });
+  if (req.body.family === " ") {
+    renderNewPage(res, plant, true);
+    return;
+  }
   let defaultCover = ""; //set this to an encoded image to be default image
   if (req.body.cover != null && req.body.cover !== "") {
     saveCover(plant, req.body.cover);
