@@ -13,8 +13,8 @@
   </tr>
   <img width="100" height="150" src="<%= plant.coverImagePath%>" />
   <tr>
-    <th>Author:</th>
-    <td><%= plant.author.name %></td>
+    <th>User growing this:</th>
+    <td><%= plant.user.username %></td>
   </tr>
   <tr>
     <th>Planted Date:</th>
@@ -26,6 +26,6 @@
 
 <div class="button-container">
   <a class="btn btn-primary" href="/plants/<%= plant.id %>/edit">Edit</a>
-  <a class="btn btn-primary" href="/authors/<%= plant.author.id %>">View Author</a>
+  <a class="btn btn-primary" href="/users/<%= plant.user._id %>">View Author</a>
   <%- include('../partials/deleteForm', {url: `/plants/${plant.id}`}) %>
 </div>

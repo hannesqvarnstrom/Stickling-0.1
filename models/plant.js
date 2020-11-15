@@ -32,10 +32,10 @@ const plantSchema = new mongoose.Schema({
     type: String,
     // required: true,
   },
-  author: {
+  user: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,
-    ref: "Author",
+    ref: "User",
   },
 });
 

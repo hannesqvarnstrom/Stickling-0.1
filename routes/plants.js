@@ -2,9 +2,13 @@ const express = require("express");
 const router = express.Router();
 const Plant = require("../models/plant"); //
 const Author = require("../models/author");
+const User = require("../models/user");
 const imageMimeTypes = ["image/jpeg", "image/png", "image/gif"];
 // const plantFamilies = require("/views/plants/_plantFamilies.ejs");
-
+//new plant route
+router.get("/new", async (req, res) => {
+  renderNewPage(res, new Plant());
+});
 //all Plants route
 router.get("/", async (req, res) => {
   let query = Plant.find();
@@ -42,10 +46,6 @@ router.get("/", async (req, res) => {
 // router.get("/:family", async (req, res) => {
 
 // });
-//new plant route
-router.get("/new", async (req, res) => {
-  renderNewPage(res, new Plant());
-});
 
 //create plant route
 router.post("/", async (req, res) => {
@@ -54,7 +54,7 @@ router.post("/", async (req, res) => {
     name: req.body.name,
     latinName: req.body.latinName,
     family: req.body.family,
-    author: req.body.author,
+    user: req.session.userId,
     plantedDate: new Date(req.body.plantedDate),
     // coverImageName: fileName,
     description: req.body.description,
@@ -72,18 +72,17 @@ router.post("/", async (req, res) => {
     const newPlant = await plant.save();
     res.redirect(`plants/${newPlant.id}`);
     // res.redirect("books");
-  } catch {
+  } catch (err) {
     // if (book.coverImageName != null) {
     //   removeBookCover(book.coverImageName);
     // }
-    // console.log(res.body);
     renderNewPage(res, plant, true);
   }
 });
 //show plant route
 router.get("/:id", async (req, res) => {
   try {
-    const plant = await Plant.findById(req.params.id).populate("author").exec();
+    const plant = await Plant.findById(req.params.id).populate("user").exec();
     res.render("plants/show", { plant: plant });
   } catch {
     res.redirect("/");
@@ -163,9 +162,9 @@ async function renderEditPage(res, plant, hasError = false) {
 
 async function renderFormPage(res, plant, form, hasError = false) {
   try {
-    const authors = await Author.find({});
+    const users = await User.find({});
     const params = {
-      authors: authors,
+      users: users,
       plant: plant,
     };
     if (hasError) {
@@ -175,9 +174,11 @@ async function renderFormPage(res, plant, form, hasError = false) {
         params.errorMessage = "Error creating plant";
       }
     }
+    // if (res.session != null) {
     res.render(`plants/${form}`, params);
+    // }
   } catch (e) {
-    console.log(e);
+    // console.log(e);
     res.redirect("/plants");
   }
 }

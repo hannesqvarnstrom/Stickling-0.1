@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt"); //is needed?
+const Plant = require("./plant");
 const userSchema = new mongoose.Schema({
   email: {
     type: String,
@@ -38,6 +39,18 @@ userSchema.statics.authenticate = function (email, password, callback) {
     });
   });
 };
+userSchema.pre("remove", function (next) {
+  //this is not implemented yet
+  Plant.find({ user: this.id }, (err, plants) => {
+    if (err) {
+      next(err);
+    } else if (plants.length > 0) {
+      next(new Error("This user has plants still!"));
+    } else {
+      next();
+    }
+  });
+});
 
 userSchema.pre("save", function (next) {
   // THIS SHOULD WORK?!"?!?!"

@@ -2,11 +2,77 @@ const express = require("express");
 const router = express.Router();
 const User = require("../models/user");
 const Author = require("../models/author");
+const Plant = require("../models/plant");
 
-router.get("/", async (req, res) => {
-  res.render("users/index");
+router.get("/profile", (req, res) => {
+  //route correct?
+  if (req.session.userId !== null) {
+    try {
+      User.findById(req.session.userId).exec(function (error, user) {
+        // session.userId blir profile?
+        if (error) {
+          //   console.log("before");
+          return;
+          //   console.log(error);
+          //   return next(error);
+        } else {
+          if (user === null) {
+            // let err = new Error("Not authorized! Go back");
+            // err.status = 400;
+            // return next(err);
+            res.redirect("/users");
+          } else {
+            // console.log("hej");
+            return res.render("users/profile", {
+              user: user,
+            });
+          }
+        }
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  }
 });
 
+router.get("/logout", (req, res, next) => {
+  if (req.session) {
+    req.session.destroy(function (err) {
+      if (err) {
+        return next(err);
+      } else {
+        return res.redirect("/");
+      }
+    });
+  }
+});
+router.get("/", async (req, res) => {
+  let searchOptions = {};
+  if (req.query.username != null && req.query.username !== "") {
+    searchOptions.username = new RegExp(req.query.username, "i");
+  }
+  //   console.log(searchOptions);
+  try {
+    const users = await User.find(searchOptions); //searchOptions
+    res.render("users/index", { users: users, searchOptions: req.query }); //, searchOptions: req.query
+  } catch {
+    res.redirect("/");
+  }
+});
+router.get("/:id", async (req, res) => {
+  //THIS IS PROBABLY NEEDED
+  try {
+    const user = await User.findById(req.params.id); //maybe is params._id
+    const plants = await Plant.find({ user: user._id }).limit(6).exec(); //this is one of the places where user: user._id is gonna be used i think
+    res.render("users/show", {
+      user: user,
+      plantsByUser: plants,
+    });
+  } catch (err) {
+    console.log(err);
+    res.redirect("/");
+  }
+});
 router.post("/", async (req, res) => {
   if (req.body.password !== req.body.passwordConf) {
     let err = new Error("Passwords do not match");
@@ -70,35 +136,5 @@ router.post("/", async (req, res) => {
 });
 
 //get route after registering
-router.get("/profile", function (req, res, next) {
-  //route correct?
-  User.findById(req.session.userId).exec(function (error, user) {
-    if (error) {
-      return next(error);
-    } else {
-      if (user === null) {
-        // let err = new Error("Not authorized! Go back");
-        // err.status = 400;
-        // return next(err);
-        res.redirect("/users");
-      } else {
-        return res.render("users/profile", {
-          user: user,
-        });
-      }
-    }
-  });
-});
 
-router.get("/logout", (req, res, next) => {
-  if (req.session) {
-    req.session.destroy(function (err) {
-      if (err) {
-        return next(err);
-      } else {
-        return res.redirect("/");
-      }
-    });
-  }
-});
 module.exports = router;

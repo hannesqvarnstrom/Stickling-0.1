@@ -1,0 +1,26 @@
+<h2 class="page-header"><%= user.username %></h2>
+<h3>This is the page for the user where all public user info is displayed</h3>
+<div class="button-container">
+  <a class="btn btn-primary" href="/users/<%= user._id %>/edit">Edit NOT WORKING</a>
+  <%- include('../partials/deleteForm', {url: `/users/${user._id}`}) %>
+</div>
+<% if (plantsByUser.length > 0) { %>
+<div>
+  <h2>Plants by user</h2>
+  <div class="search-result-container">
+    <% plantsByUser.forEach(plant => {%>
+    <div class="card">
+      <a href="/plants/<%=plant.id%>">
+        <img
+          height="150"
+          class="thumbnail"
+          width="100"
+          src="<%=plant.coverImagePath %>"
+        /> </a
+      ><a href="/plants/<%=plant.id%>"><%=plant.name%></a>
+    </div>
+    <%})%>
+  </div>
+</div>
+<%}%>
+<!--NEED TO CHANGE PLANTS/NEW VIEW / ROUTE TO AUTO INCLUDE USERID AS A PARAMETER OF THE PLANT SCHEMA-->
