@@ -65,9 +65,9 @@ textarea {
 }
 .form-row {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
   grid-template-rows: 1fr;
-  margin-bottom: 5px;
+  /* margin-bottom: 5px; */
 }
 .form-row.textfields {
   background-color: transparent;
@@ -77,14 +77,14 @@ textarea {
   display: grid;
   grid-template-columns: 1fr 1fr;
   column-gap: 5px;
+  margin-bottom: 10px;
 }
-.form-row > div:first-child {
-  padding-left: 0px;
-}
+/* .form-row > div:first-child {
+} */
 .form-row label,
 .form-row input,
 .form-row select {
-  min-width: 80%;
+  min-width: 100%;
 }
 input,
 select,
@@ -208,5 +208,15 @@ a {
   }
   .card a {
     margin: 0 20px;
+  }
+}
+
+@media only screen and (max-width: 850px) {
+  .form-row {
+    width: 100%;
+    grid-template-columns: 1fr;
+  }
+  .form-row > div {
+    grid-template-columns: 1fr;
   }
 }
