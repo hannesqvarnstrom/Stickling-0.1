@@ -1,0 +1,22 @@
+<h2>Create new user</h2>
+<form action="/users" method="POST">
+  <div class="form-row new-author"></div>
+  <label for="username">User Name</label>
+  <input type="text" name="username" />
+  <label>Email adress</label>
+  <input type="text" name="email" />
+  <label>Password</label>
+  <input type="text" name="password" />
+  <label>Confirm Password</label>
+  <input type="text" name="passwordConf" />
+
+  <a class="btn btn-danger" href="/users">Cancel</a>
+  <button class="btn btn-primary" type="submit">Create</button>
+</form>
+
+<h2>This is the login form</h2>
+<form method="POST" action="/users">
+  <input type="text" name="logemail" placeholder="Email" />
+  <input type="password" name="logpassword" placeholder="Password" />
+  <button type="submit">Submit</button>
+</form>
