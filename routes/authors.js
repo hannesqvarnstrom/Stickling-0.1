@@ -3,7 +3,7 @@ const router = express.Router();
 const Author = require("../models/author"); //
 const Plant = require("../models/plant");
 
-//all authors route
+//all authors route MAYBE NEEDED
 router.get("/", async (req, res) => {
   let searchOptions = {};
   if (req.query.name != null && req.query.name !== "") {
@@ -17,12 +17,12 @@ router.get("/", async (req, res) => {
   }
 });
 
-//new auithor route
+//new auithor route NOT NEEDED AFTER USER INTEGRATION
 router.get("/new", (req, res) => {
   res.render("authors/new", { author: new Author() });
 });
 
-//create author route
+//create author route NOT NEEDED AFTER USER INTEGRATION
 router.post("/", async (req, res) => {
   const author = new Author({
     name: req.body.name,
@@ -40,9 +40,10 @@ router.post("/", async (req, res) => {
 });
 
 router.get("/:id", async (req, res) => {
+  //THIS IS PROBABLY NEEDED
   try {
     const author = await Author.findById(req.params.id);
-    const plants = await Plant.find({ author: author.id }).limit(6).exec();
+    const plants = await Plant.find({ author: author.id }).limit(6).exec(); //this is one of the places where user: user._id is gonna be used i think
     res.render("authors/show", {
       author: author,
       plantsByAuthor: plants,
@@ -53,6 +54,7 @@ router.get("/:id", async (req, res) => {
 });
 
 router.get("/:id/edit", async (req, res) => {
+  //THIS SHOULD BE ADDED TO USERS INSTEAD AND CHECK AUTHENTICAION
   try {
     const author = await Author.findById(req.params.id);
     res.render("authors/edit", { author: author });
@@ -61,6 +63,7 @@ router.get("/:id/edit", async (req, res) => {
   }
 });
 
+//SAME AS LAST ONE, CHECK FOR AUTH
 router.put("/:id", async (req, res) => {
   let author;
   try {
@@ -81,6 +84,7 @@ router.put("/:id", async (req, res) => {
   }
 });
 
+//JUST ADAPT FOR USER, CHECK FOR AUTH
 router.delete("/:id", async (req, res) => {
   let author;
   try {

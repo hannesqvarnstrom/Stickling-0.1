@@ -77,9 +77,10 @@ router.get("/profile", function (req, res, next) {
       return next(error);
     } else {
       if (user === null) {
-        let err = new Error("Not authorized! Go back");
-        err.status = 400;
-        return next(err);
+        // let err = new Error("Not authorized! Go back");
+        // err.status = 400;
+        // return next(err);
+        res.redirect("/users");
       } else {
         return res.render("users/profile", {
           user: user,
@@ -89,4 +90,15 @@ router.get("/profile", function (req, res, next) {
   });
 });
 
+router.get("/logout", (req, res, next) => {
+  if (req.session) {
+    req.session.destroy(function (err) {
+      if (err) {
+        return next(err);
+      } else {
+        return res.redirect("/");
+      }
+    });
+  }
+});
 module.exports = router;
