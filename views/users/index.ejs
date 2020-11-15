@@ -1,37 +1,52 @@
-<h2>Create new user</h2>
-<form action="/users" method="POST">
-  <div class="form-row new-author"></div>
-  <label for="username">User Name</label>
-  <input type="text" name="username" />
-  <label>Email adress</label>
-  <input type="text" name="email" />
-  <label>Password</label>
-  <input type="text" name="password" />
-  <label>Confirm Password</label>
-  <input type="text" name="passwordConf" />
+<form method="get" id="logout" action="/users/logout">
+  <button class="btn btn-danger" type="submit">Logout</button>
+</form>
+<h2 class="btn">Log in</h2>
+<form method="POST" class="logIn hidden toggleable" action="/users">
+  <div class="form-row">
+    <div>
+      <input type="text" name="logemail" placeholder="Email" />
+      <input type="password" name="logpassword" placeholder="Password" />
+    </div>
+  </div>
+  <button class="btn btn-primary" type="submit">Submit</button>
+</form>
+<h2 class="btn">Create new user</h2>
+<form action="/users" class="createUser hidden toggleable" method="POST">
+  <div class="form-row new-author">
+    <div>
+      <label for="username">User Name</label>
+      <input type="text" name="username" />
+    </div>
+    <div>
+      <label>Email adress</label>
+      <input type="text" name="email" />
+    </div>
+  </div>
+  <div class="form-row">
+    <div>
+      <label>Password</label>
+      <input type="text" name="password" />
+    </div>
+    <div>
+      <label>Confirm Password</label>
+      <input type="text" name="passwordConf" />
+    </div>
+  </div>
 
   <a class="btn btn-danger" href="/users">Cancel</a>
   <button class="btn btn-primary" type="submit">Create</button>
 </form>
 
-<h2>This is the login form</h2>
-<form method="POST" action="/users">
-  <input type="text" name="logemail" placeholder="Email" />
-  <input type="password" name="logpassword" placeholder="Password" />
-  <button type="submit">Submit</button>
-</form>
-<form method="get" action="/users/logout">
-  <button type="submit">Logout</button>
-</form>
-
-<form action="/users" method="GET">
+<h2 class="btn">Search for users</h2>
+<form action="/users" class="searchUsers toggleable hidden" method="GET">
   <div class="form-row new-author">
     <label>Username</label>
     <input type="text" name="username" value="<%= searchOptions.username %>" />
   </div>
   <button class="btn btn-primary" type="submit">Search</button>
 </form>
-<div class="search-result-container">
+<div class="search-result-container toggleable hidden">
   <% users.forEach(user => { %>
   <div class="card">
     <p><%= user.username %></p>
@@ -44,3 +59,19 @@
   </div>
   <% }) %>
 </div>
+<script>
+  let forms = document.querySelectorAll(".toggleable");
+  console.log(forms);
+  //   forms[4] = document.querySelector(".search-result-container");
+  let headings = document.querySelectorAll("h2");
+  headings[0].addEventListener("click", () => {
+    forms[0].classList.toggle("hidden");
+  });
+  headings[1].addEventListener("click", () => {
+    forms[1].classList.toggle("hidden");
+  });
+  headings[2].addEventListener("click", () => {
+    forms[2].classList.toggle("hidden");
+    forms[3].classList.toggle("hidden");
+  });
+</script>
