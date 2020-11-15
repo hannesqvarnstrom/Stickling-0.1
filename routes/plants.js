@@ -23,7 +23,7 @@ router.get("/", async (req, res) => {
   if (req.query.latinName != null && req.query.latinName !== "") {
     query = query.regex("latinName", new RegExp(req.query.latinName, "i"));
   }
-  if (req.query.family != null && req.query.family !== "") {
+  if (req.query.family != null && req.query.family !== " ") {
     query = query.regex("family", new RegExp(req.query.family, "i"));
   }
   try {
