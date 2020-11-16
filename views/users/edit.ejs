@@ -1,0 +1,28 @@
+<h2 class="page-header">Edit User</h2>
+
+<form action="/users/<%= user.id%>?_method=PUT" method="POST">
+  <div class="form-row new-author">
+    <div>
+      <label for="username">User Name</label>
+      <input type="text" name="username" />
+    </div>
+    <div>
+      <label>Email adress</label>
+      <input type="text" name="email" />
+    </div>
+  </div>
+  <div class="form-row">
+    <div>
+      <label> New Password</label>
+      <input type="text" name="password" />
+    </div>
+    <div>
+      <label>Confirm New Password</label>
+      <input type="text" name="passwordConf" />
+    </div>
+  </div>
+  <!--THIS NEEDS CHANGING, THE FORM FIELDS STUFF-->
+  <a class="btn btn-danger" href="/users/<%= user.id %>">Cancel</a
+  ><!--id or _id?-->
+  <button class="btn btn-primary" type="submit">Update</button>
+</form>

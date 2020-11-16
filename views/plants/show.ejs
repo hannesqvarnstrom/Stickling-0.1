@@ -25,7 +25,9 @@
 <br />
 
 <div class="button-container">
+  <% if (isOwner) {%>
   <a class="btn btn-primary" href="/plants/<%= plant.id %>/edit">Edit</a>
+  <%- include('../partials/deleteForm', {url: `/plants/${plant.id}`}) %> <%} else {%>
   <a class="btn btn-primary" href="/users/<%= plant.user._id %>">View Author</a>
-  <%- include('../partials/deleteForm', {url: `/plants/${plant.id}`}) %>
+  <%}%>
 </div>

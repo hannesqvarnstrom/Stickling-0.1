@@ -1,48 +1,49 @@
 <h2 class="page-header">Search Plants</h2>
 
-<form action="/plants" method="GET">
-  <div class="form-row">
-    <div>
-      <label>Name</label>
-      <input type="text" name="name" value="<%= searchOptions.name %>" />
+  <form action="/plants" method="GET">
+    <div class="form-row">
+      <div>
+        <label>Name</label>
+        <input type="text" name="name" value="<%= searchOptions.name %>" />
+      </div>
+      <div>
+        <label>Latin Name</label>
+        <input type="text" name="latinName" value="<%= searchOptions.latinName %>" />
+      </div>
     </div>
-    <div>
-      <label>Latin Name</label>
-      <input type="text" name="latinName" value="<%= searchOptions.latinName %>" />
+    <div class="form-row">
+      <div>
+        <label>Planted After</label>
+        <input
+          type="date"
+          name="publishedAfter"
+          value="<%= searchOptions.publishedAfter %>"
+        />
+      </div>
+      <div>
+        <label>Planted Before</label>
+        <input
+          type="date"
+          name="publishedBefore"
+          value="<%= searchOptions.publishedBefore %>"
+        />
+      </div>
     </div>
+    <div class="form-row"><%- include("_plantFamilies.ejs")%></div>
+    <button class="btn btn-primary" type="submit">Search</button>
+  </form>
+  <br />
+  <div class="search-result-container">
+    <% plants.forEach(plant => { %>
+    <div class="card">
+      <a href="/plants/<%= plant.id %>">
+        <img
+          class="thumbnail"
+          height="150"
+          width="100"
+          src="<%= plant.coverImagePath %>" /></a
+      ><br /><a href="/plants/<%= plant.id %>"><%=plant.name%></a>
+    </div>
+    <% }) %>
   </div>
-  <div class="form-row">
-    <div>
-      <label>Planted After</label>
-      <input
-        type="date"
-        name="publishedAfter"
-        value="<%= searchOptions.publishedAfter %>"
-      />
-    </div>
-    <div>
-      <label>Planted Before</label>
-      <input
-        type="date"
-        name="publishedBefore"
-        value="<%= searchOptions.publishedBefore %>"
-      />
-    </div>
-  </div>
-  <div class="form-row"><%- include("_plantFamilies.ejs")%></div>
-  <button class="btn btn-primary" type="submit">Search</button>
-</form>
-<br />
-<div class="search-result-container">
-  <% plants.forEach(plant => { %>
-  <div class="card">
-    <a href="/plants/<%= plant.id %>">
-      <img
-        class="thumbnail"
-        height="150"
-        width="100"
-        src="<%= plant.coverImagePath %>" /></a
-    ><br /><a href="/plants/<%= plant.id %>"><%=plant.name%></a>
-  </div>
-  <% }) %>
-</div>
+</h3>

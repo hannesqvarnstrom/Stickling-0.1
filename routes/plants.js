@@ -83,7 +83,8 @@ router.post("/", async (req, res) => {
 router.get("/:id", async (req, res) => {
   try {
     const plant = await Plant.findById(req.params.id).populate("user").exec();
-    res.render("plants/show", { plant: plant });
+    const isOwner = req.session.userId == plant.user._id;
+    res.render("plants/show", { plant: plant, isOwner: isOwner });
   } catch {
     res.redirect("/");
   }
@@ -93,7 +94,17 @@ router.get("/:id", async (req, res) => {
 router.get("/:id/edit", async (req, res) => {
   try {
     const plant = await Plant.findById(req.params.id);
-    renderEditPage(res, plant);
+    const plantUser = plant.user;
+    if (plantUser._id == req.session.userId) {
+      renderEditPage(res, plant);
+    } else {
+      const plants = await Plant.find({});
+      res.render("plants/index", {
+        errorMessage: "You do not have the authority to edit this plant.",
+        plants: plants,
+        searchOptions: req.query, //placeholder
+      });
+    }
   } catch {
     res.redirect("/");
   }

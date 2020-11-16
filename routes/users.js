@@ -64,15 +64,49 @@ router.get("/:id", async (req, res) => {
   try {
     const user = await User.findById(req.params.id); //maybe is params._id
     const plants = await Plant.find({ user: user._id }).limit(6).exec(); //this is one of the places where user: user._id is gonna be used i think
+    const isOwnUser = req.session.userId == user._id;
     res.render("users/show", {
       user: user,
       plantsByUser: plants,
+      isOwnUser: isOwnUser,
     });
   } catch (err) {
     console.log(err);
     res.redirect("/");
   }
 });
+router.get("/:id/edit", async (req, res) => {
+  if (req.session.userId == req.params.id) {
+    try {
+      const user = await User.findById(req.params.id);
+      res.render("users/edit", { user: user });
+    } catch {
+      res.redirect("/users");
+    }
+  } else res.redirect("/users");
+});
+
+router.put("/:id", async (req, res) => {
+  let user;
+  try {
+    user = await User.findById(req.params.id);
+    user.username = req.body.username;
+    user.email = req.body.email;
+    user.password = req.body.password;
+    await user.save();
+    res.redirect(`/users/${user.id}`);
+  } catch {
+    if (user == null) {
+      res.redirect("/");
+    } else {
+      res.render("users/edit", {
+        user: user,
+        errorMessage: "Error updating User",
+      });
+    }
+  }
+});
+
 router.post("/", async (req, res) => {
   if (req.body.password !== req.body.passwordConf) {
     let err = new Error("Passwords do not match");
@@ -103,7 +137,9 @@ router.post("/", async (req, res) => {
       if (error || !user) {
         let err = new Error("Wrong email or password");
         err.status = 401;
-        return next(err);
+        // return next(err);
+        console.log(err);
+        res.render("users", { errorMessage: err, searchOptions: req.query, users: [] }); //placeholder req
       } else {
         req.session.userId = user._id;
         return res.redirect("users/profile");
