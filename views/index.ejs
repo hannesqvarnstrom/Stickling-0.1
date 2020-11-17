@@ -1,9 +1,19 @@
 <%- include('partials/welcomeMsg.ejs')%>
 <h2 class="page-header">Recently Added</h2>
 <div>
-  <% plants.forEach(plant => { %>
-  <a href="/plants/<%= plant.id%>">
-    <img height="150" width="100" src="<%= plant.coverImagePath %>" />
-  </a>
-  <% }) %>
+  <div class="search-result-container">
+    <% plants.forEach(plant => { %>
+    <div class="card">
+      <a href="/plants/<%= plant.id%>">
+        <img
+          height="200"
+          width="150"
+          class="thumbnail"
+          src="<%= plant.coverImagePath %>"
+        />
+      </a>
+      <a href="/plants/<%= plant.id%>"><%=plant.name%></a>
+    </div>
+    <% }) %>
+  </div>
 </div>
