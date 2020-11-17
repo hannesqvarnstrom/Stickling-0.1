@@ -1,5 +1,5 @@
 <h2 class="page-header">Search for users</h2>
-<form action="/users" class="searchUsers" method="GET">
+<form action="/users/findUsers" class="searchUsers" method="GET">
   <!--this used to have classes  toggleable hidden-->
   <div class="form-row new-author">
     <label>Display Name</label>
@@ -7,10 +7,12 @@
   </div>
   <button class="btn btn-primary" type="submit">Search</button>
 </form>
+<br />
+<br />
 <div class="search-result-container">
   <!--used to have classes  toggleable hidden-->
   <% users.forEach(user => { %>
-  <div class="card">
+  <div class="card user-card">
     <p><%= user.username %></p>
 
     <div class="btn-row">

@@ -11,7 +11,8 @@
     <th>Taxonomic Family:</th>
     <td><%= plant.family %></td>
   </tr>
-  <img width="100" height="150" src="<%= plant.coverImagePath%>" />
+  <!-- IMG BELOW IN CONTAINER, SHOW IN NATIVE SIZE? -->
+  <img style="width: 50%; margin: 0 auto" src="<%= plant.coverImagePath%>" />
   <tr>
     <th>User growing this:</th>
     <td><%= plant.user.username %></td>

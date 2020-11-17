@@ -42,11 +42,12 @@ router.get("/findUsers", async (req, res) => {
   }
   try {
     const users = await User.find(searchOptions); //searchOptions
+
     res.render("users/findUsers", {
       users: users,
       searchOptions: req.query,
       isLoggedIn: req.session.userId != null,
-    }); //, searchOptions: req.query
+    });
   } catch {
     res.redirect("/");
   }
@@ -68,9 +69,9 @@ router.get("/", async (req, res) => {
   // if (req.query.username != null && req.query.username !== "") {
   //   searchOptions.username = new RegExp(req.query.username, "i");
   // }
-  // //   console.log(searchOptions);
+  //   console.log(searchOptions);
   // try {
-  //   const users = await User.find(searchOptions); //searchOptions
+  // const users = await User.find(searchOptions); //searchOptions
   res.render("users/index", {
     //     users: users,
     //     searchOptions: req.query,

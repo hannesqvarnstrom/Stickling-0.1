@@ -106,7 +106,6 @@ textarea {
   text-decoration: none;
   padding-bottom: 5px;
 }
-
 .button-container {
   display: grid;
   grid-template-columns: 1fr 2fr 1fr 4fr;
