@@ -178,7 +178,7 @@ async function renderNewPage(res, req, plant, hasError = false) {
   renderFormPage(res, req, plant, "new", hasError);
 }
 
-async function renderEditPage(res, plant, hasError = false) {
+async function renderEditPage(res, req, plant, hasError = false) {
   renderFormPage(res, req, plant, "edit", hasError);
 }
 
