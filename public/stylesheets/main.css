@@ -24,6 +24,11 @@ body {
     var(--color-background-light)
   );
 }
+.filepond--file,
+.filepond--item {
+  max-height: 250px;
+  overflow: hidden;
+}
 body,
 html {
   max-width: 100vw;
