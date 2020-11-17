@@ -76,7 +76,17 @@
   <label>Family</label>
   <select name="family">
     <% plantFamilies.forEach(family => { %>
-    <option label="<%= family %>" value="<%= family %>"></option>
-    <% }) %>
+      <option label="<%= family %>" value="<%= family %>" 
+        <% if (locals.plant !== undefined){ %>
+          <% if (family == plant.family){%> 
+            selected="selected" 
+          <%}%>
+        <%} else if (locals.searchOptions != undefined){%>
+          <% if (locals.searchOptions.family == family){%> 
+             selected="selected"
+          <%}%>
+        <%}%>
+    </option>
+  <% }) %>
   </select>
 </div>
