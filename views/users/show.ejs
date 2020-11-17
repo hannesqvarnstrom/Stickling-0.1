@@ -3,7 +3,7 @@
 <div class="button-container">
   <% if (isOwnUser) {%>
   <a class="btn btn-primary" href="/users/<%= user._id %>/edit">Edit</a>
-  <%- include('../partials/deleteForm', {url: `/users/${user._id}`}) %> <%} else {%>
+  <%-// include('../partials/deleteForm', {url: `/users/${user._id}`}) %> <%} else {%>
   <a href="mailto:<%= user.email%>" class="btn btn-primary">Contact</a>
   <%}%>
 </div>
