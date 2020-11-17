@@ -34,10 +34,14 @@
 }
 .btn-row > .btn.btn-primary {
   color: var(--color-btn-primary-text);
+  margin: 0 auto;
 }
 .btn-primary {
   color: var(--color-btn-primary-text);
   background-color: var(--color-btn-primary-background);
+}
+.btn:hover {
+  background-color: var(--color-background-light);
 }
 .btn-primary:hover {
   color: var(--color-btn-primary-text-dark);

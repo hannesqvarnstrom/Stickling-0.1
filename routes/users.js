@@ -24,6 +24,7 @@ router.get("/profile", (req, res) => {
           } else {
             // console.log("hej");
             return res.render("users/profile", {
+              isLoggedIn: req.session.userId != null,
               user: user,
             });
           }
@@ -32,6 +33,22 @@ router.get("/profile", (req, res) => {
     } catch (e) {
       console.log(e);
     }
+  }
+});
+router.get("/findUsers", async (req, res) => {
+  let searchOptions = {};
+  if (req.query.username != null && req.query.username !== "") {
+    searchOptions.username = new RegExp(req.query.username, "i");
+  }
+  try {
+    const users = await User.find(searchOptions); //searchOptions
+    res.render("users/findUsers", {
+      users: users,
+      searchOptions: req.query,
+      isLoggedIn: req.session.userId != null,
+    }); //, searchOptions: req.query
+  } catch {
+    res.redirect("/");
   }
 });
 
@@ -47,17 +64,22 @@ router.get("/logout", (req, res, next) => {
   }
 });
 router.get("/", async (req, res) => {
-  let searchOptions = {};
-  if (req.query.username != null && req.query.username !== "") {
-    searchOptions.username = new RegExp(req.query.username, "i");
-  }
-  //   console.log(searchOptions);
-  try {
-    const users = await User.find(searchOptions); //searchOptions
-    res.render("users/index", { users: users, searchOptions: req.query }); //, searchOptions: req.query
-  } catch {
-    res.redirect("/");
-  }
+  // let searchOptions = {};
+  // if (req.query.username != null && req.query.username !== "") {
+  //   searchOptions.username = new RegExp(req.query.username, "i");
+  // }
+  // //   console.log(searchOptions);
+  // try {
+  //   const users = await User.find(searchOptions); //searchOptions
+  res.render("users/index", {
+    //     users: users,
+    //     searchOptions: req.query,
+    isLoggedIn: req.session.userId != null,
+  });
+  //   }); //, searchOptions: req.query
+  // } catch {
+  //   res.redirect("/");
+  // }
 });
 router.get("/:id", async (req, res) => {
   //THIS IS PROBABLY NEEDED
@@ -69,6 +91,7 @@ router.get("/:id", async (req, res) => {
       user: user,
       plantsByUser: plants,
       isOwnUser: isOwnUser,
+      isLoggedIn: req.session.userId != null,
     });
   } catch (err) {
     console.log(err);
@@ -79,7 +102,7 @@ router.get("/:id/edit", async (req, res) => {
   if (req.session.userId == req.params.id) {
     try {
       const user = await User.findById(req.params.id);
-      res.render("users/edit", { user: user });
+      res.render("users/edit", { user: user, isLoggedIn: req.session.userId != null });
     } catch {
       res.redirect("/users");
     }
@@ -102,6 +125,7 @@ router.put("/:id", async (req, res) => {
       res.render("users/edit", {
         user: user,
         errorMessage: "Error updating User",
+        isLoggedIn: req.session.userId != null,
       });
     }
   }
@@ -139,7 +163,12 @@ router.post("/", async (req, res) => {
         err.status = 401;
         // return next(err);
         console.log(err);
-        res.render("users", { errorMessage: err, searchOptions: req.query, users: [] }); //placeholder req
+        res.render("users", {
+          errorMessage: err,
+          searchOptions: req.query,
+          users: [],
+          isLoggedIn: req.session.userId != null,
+        }); //placeholder req
       } else {
         req.session.userId = user._id;
         return res.redirect("users/profile");

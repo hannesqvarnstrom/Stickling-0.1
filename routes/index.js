@@ -8,7 +8,7 @@ router.get("/", async (req, res) => {
   } catch {
     plants = [];
   }
-  res.render("index", { plants: plants });
+  res.render("index", { plants: plants, isLoggedIn: req.session.userId != null });
 });
 
 module.exports = router;

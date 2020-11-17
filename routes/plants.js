@@ -7,7 +7,7 @@ const imageMimeTypes = ["image/jpeg", "image/png", "image/gif"];
 // const plantFamilies = require("/views/plants/_plantFamilies.ejs");
 //new plant route
 router.get("/new", async (req, res) => {
-  renderNewPage(res, new Plant());
+  renderNewPage(res, req, new Plant());
 });
 //all Plants route
 router.get("/", async (req, res) => {
@@ -36,6 +36,7 @@ router.get("/", async (req, res) => {
       plants: plants,
       searchOptions: req.query,
       // plantFamilies: plantFamilies,
+      isLoggedIn: req.session.userId != null,
     });
   } catch {
     res.redirect("/");
@@ -60,7 +61,7 @@ router.post("/", async (req, res) => {
     description: req.body.description,
   });
   if (req.body.family === " ") {
-    renderNewPage(res, plant, true);
+    renderNewPage(res, req, plant, true);
     return;
   }
   let defaultCover = ""; //set this to an encoded image to be default image
@@ -76,7 +77,7 @@ router.post("/", async (req, res) => {
     // if (book.coverImageName != null) {
     //   removeBookCover(book.coverImageName);
     // }
-    renderNewPage(res, plant, true);
+    renderNewPage(res, req, plant, true);
   }
 });
 //show plant route
@@ -84,7 +85,11 @@ router.get("/:id", async (req, res) => {
   try {
     const plant = await Plant.findById(req.params.id).populate("user").exec();
     const isOwner = req.session.userId == plant.user._id;
-    res.render("plants/show", { plant: plant, isOwner: isOwner });
+    res.render("plants/show", {
+      plant: plant,
+      isOwner: isOwner,
+      isLoggedIn: req.session.userId != null,
+    });
   } catch {
     res.redirect("/");
   }
@@ -96,13 +101,14 @@ router.get("/:id/edit", async (req, res) => {
     const plant = await Plant.findById(req.params.id);
     const plantUser = plant.user;
     if (plantUser._id == req.session.userId) {
-      renderEditPage(res, plant);
+      renderEditPage(res, req, plant);
     } else {
       const plants = await Plant.find({});
       res.render("plants/index", {
         errorMessage: "You do not have the authority to edit this plant.",
         plants: plants,
         searchOptions: req.query, //placeholder
+        isLoggedIn: req.session.userId != null,
       });
     }
   } catch {
@@ -128,7 +134,7 @@ router.put("/:id", async (req, res) => {
     res.redirect(`/plants/${plant.id}`);
   } catch {
     if (plant != null) {
-      renderEditPage(res, plant, true);
+      renderEditPage(res, req, plant, true);
     } else {
       res.redirect("/");
     }
@@ -144,7 +150,11 @@ router.delete("/:id", async (req, res) => {
     res.redirect("/plants");
   } catch {
     if (plant != null) {
-      res.render("plants/show", { plant: plant, errorMessage: "Could not remove plant" });
+      res.render("plants/show", {
+        plant: plant,
+        errorMessage: "Could not remove plant",
+        isLoggedIn: req.session.userId != null,
+      });
     } else {
       res.redirect("/");
     }
@@ -163,20 +173,21 @@ function saveCover(plant, coverEncoded) {
   }
 }
 
-async function renderNewPage(res, plant, hasError = false) {
-  renderFormPage(res, plant, "new", hasError);
+async function renderNewPage(res, req, plant, hasError = false) {
+  renderFormPage(res, req, plant, "new", hasError);
 }
 
 async function renderEditPage(res, plant, hasError = false) {
-  renderFormPage(res, plant, "edit", hasError);
+  renderFormPage(res, req, plant, "edit", hasError);
 }
 
-async function renderFormPage(res, plant, form, hasError = false) {
+async function renderFormPage(res, req, plant, form, hasError = false) {
   try {
     const users = await User.find({});
     const params = {
       users: users,
       plant: plant,
+      isLoggedIn: req.session.userId != null,
     };
     if (hasError) {
       if (form === "edit") {
@@ -189,7 +200,7 @@ async function renderFormPage(res, plant, form, hasError = false) {
     res.render(`plants/${form}`, params);
     // }
   } catch (e) {
-    // console.log(e);
+    console.log(e);
     res.redirect("/plants");
   }
 }
