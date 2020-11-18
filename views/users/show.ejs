@@ -1,13 +1,11 @@
 <h2 class="page-header"><%= user.username %></h2>
-<h3>This is the page for the user where all public user info is displayed</h3>
-<div class="button-container">
-  <% if (isOwnUser) {%>
-  <a class="btn btn-primary" href="/users/<%= user._id %>/edit">Edit</a>
-  <%-// include('../partials/deleteForm', {url: `/users/${user._id}`}) %> <%} else {%>
-  <a href="mailto:<%= user.email%>" class="btn btn-primary">Contact</a>
-  <%}%>
-</div>
-<% if (plantsByUser.length > 0) { %>
+<% if (isOwnUser) {%>
+<p>Registered email address: <%= user.email%></p>
+<a class="btn btn-primary" href="/users/<%= user._id %>/edit">Edit</a><br />
+<p>You CANNOT delete your profile before your delete your plants</p>
+<%- include('../partials/deleteForm', {url: `/users/${user._id}`}) %> <br /><%} else {%>
+<a href="mailto:<%= user.email%>" class="btn btn-primary">Contact</a><br />
+<%}%> <% if (plantsByUser.length > 0) { %>
 <div>
   <h2>Plants by user</h2>
   <div class="search-result-container">
@@ -26,4 +24,3 @@
   </div>
 </div>
 <%}%>
-<!--NEED TO CHANGE PLANTS/NEW VIEW / ROUTE TO AUTO INCLUDE USERID AS A PARAMETER OF THE PLANT SCHEMA-->

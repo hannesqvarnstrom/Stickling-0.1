@@ -1,6 +1,5 @@
 <h2 class="page-header">Search for users</h2>
 <form action="/users/findUsers" class="searchUsers" method="GET">
-  <!--this used to have classes  toggleable hidden-->
   <div class="form-row new-author">
     <label>Display Name</label>
     <input type="text" name="username" value="<%= searchOptions.username %>" />
@@ -10,22 +9,12 @@
 <br />
 <br />
 <div class="search-result-container">
-  <!--used to have classes  toggleable hidden-->
   <% users.forEach(user => { %>
   <div class="card user-card">
     <p><%= user.username %></p>
-
     <div class="btn-row" style="margin-left: auto">
       <a class="btn btn-primary" href="/users/<%=user._id%>">View</a>
-      <!--<a class="btn btn-primary" href="/users/<%=//user._id%>/edit">Edit NOT WORKING</a>-->
-      <%-// include('../partials/deleteForm', { url: `/authors/${author.id}` }) %>
     </div>
   </div>
   <% }) %>
 </div>
-<!-- <script>
-  document.querySelector("h2").addEventListener("click", () => {
-    document.querySelectorAll(".toggleable")[0].classList.toggle("hidden");
-    document.querySelectorAll(".toggleable")[1].classList.toggle("hidden");
-  }); //this used to be to show and hide
-</script> -->

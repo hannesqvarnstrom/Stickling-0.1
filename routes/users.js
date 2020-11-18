@@ -1,7 +1,6 @@
 const express = require("express");
 const router = express.Router();
 const User = require("../models/user");
-const Author = require("../models/author");
 const Plant = require("../models/plant");
 
 router.get("/profile", (req, res) => {
@@ -9,20 +8,12 @@ router.get("/profile", (req, res) => {
   if (req.session.userId !== null) {
     try {
       User.findById(req.session.userId).exec(function (error, user) {
-        // session.userId blir profile?
         if (error) {
-          //   console.log("before");
           return;
-          //   console.log(error);
-          //   return next(error);
         } else {
           if (user === null) {
-            // let err = new Error("Not authorized! Go back");
-            // err.status = 400;
-            // return next(err);
             res.redirect("/users");
           } else {
-            // console.log("hej");
             return res.render("users/profile", {
               isLoggedIn: req.session.userId != null,
               user: user,
@@ -41,8 +32,7 @@ router.get("/findUsers", async (req, res) => {
     searchOptions.username = new RegExp(req.query.username, "i");
   }
   try {
-    const users = await User.find(searchOptions); //searchOptions
-
+    const users = await User.find(searchOptions);
     res.render("users/findUsers", {
       users: users,
       searchOptions: req.query,
@@ -65,28 +55,14 @@ router.get("/logout", (req, res, next) => {
   }
 });
 router.get("/", async (req, res) => {
-  // let searchOptions = {};
-  // if (req.query.username != null && req.query.username !== "") {
-  //   searchOptions.username = new RegExp(req.query.username, "i");
-  // }
-  //   console.log(searchOptions);
-  // try {
-  // const users = await User.find(searchOptions); //searchOptions
   res.render("users/index", {
-    //     users: users,
-    //     searchOptions: req.query,
     isLoggedIn: req.session.userId != null,
   });
-  //   }); //, searchOptions: req.query
-  // } catch {
-  //   res.redirect("/");
-  // }
 });
 router.get("/:id", async (req, res) => {
-  //THIS IS PROBABLY NEEDED
   try {
-    const user = await User.findById(req.params.id); //maybe is params._id
-    const plants = await Plant.find({ user: user._id }).limit(6).exec(); //this is one of the places where user: user._id is gonna be used i think
+    const user = await User.findById(req.params.id);
+    const plants = await Plant.find({ user: user._id }).limit(12);
     const isOwnUser = req.session.userId == user._id;
     res.render("users/show", {
       user: user,
@@ -95,7 +71,6 @@ router.get("/:id", async (req, res) => {
       isLoggedIn: req.session.userId != null,
     });
   } catch (err) {
-    console.log(err);
     res.redirect("/");
   }
 });
@@ -134,10 +109,8 @@ router.put("/:id", async (req, res) => {
 
 router.post("/", async (req, res) => {
   if (req.body.password !== req.body.passwordConf) {
-    let err = new Error("Passwords do not match");
-    err.status = 400;
-    res.send("passwords don't match");
-    return next(err);
+    renderUsersPage(req.session.userId != null, "Passwords do not match.", res, req);
+    return;
   }
   if (req.body.email && req.body.username && req.body.password && req.body.passwordConf) {
     let userData = {
@@ -145,62 +118,48 @@ router.post("/", async (req, res) => {
       username: req.body.username,
       password: req.body.password,
     };
-    //THIS REGISTERS USER
     User.create(userData, function (error, user) {
       if (error) {
-        // return next(error);
-        console.log(error);
+        renderUsersPage(req.session.userId != null, "Error creating user.", res, req);
         return;
       } else {
         req.session.userId = user._id;
-        return res.redirect("users/profile"); //EITHER WAY THIS WONT WORK, IF ERROR IS HERE CHANGE PATH
+        return res.redirect("users/profile");
       }
     });
   } else if (req.body.logemail && req.body.logpassword) {
-    // WHAT IS LOGEMAIL AND LOGPASSWORD?
     User.authenticate(req.body.logemail, req.body.logpassword, function (error, user) {
       if (error || !user) {
-        let err = new Error("Wrong email or password");
-        err.status = 401;
-        // return next(err);
-        console.log(err);
-        res.render("users", {
-          errorMessage: err,
-          searchOptions: req.query,
-          users: [],
-          isLoggedIn: req.session.userId != null,
-        }); //placeholder req
+        renderUsersPage(req.session.userId != null, "Wrong email or password.", res, req);
       } else {
         req.session.userId = user._id;
         return res.redirect("users/profile");
       }
     });
   } else {
-    let err = new Error("All fields required");
-    err.status = 400;
-    return next(err);
-    //   }
-    //   let user = new User({
-    //     username: req.body.username,
-    //     email: req.body.email,
-    //     password: req.body.password,
-    //     _id: req.sessions.userId,
-    //   });
-    //   try {
-    //     const newUser = await user.save();
-    //     // res.redirect(`users/${newUser.id}`);
-    //     res.render(`users/profile`, {
-    //       user: user,
-    //     });
-    //   } catch (e) {
-    //     console.log(e);
-    //     res.render("users/index", {
-    //       user: user,
-    //       errorMessage: "Error creating user", //detta kan kräva extra
-    //     });
+    renderUsersPage(req.session.userId != null, "All fields are required", res, req);
   }
 });
 
-//get route after registering
+router.delete("/:id", async (req, res) => {
+  let user;
+  try {
+    user = await User.findById(req.params.id);
+    await user.remove();
+    res.redirect("/users/logout");
+  } catch {
+    if (user == null) {
+      res.redirect("/");
+    } else {
+      res.redirect(`/users/${user._id}`);
+    }
+  }
+});
+const renderUsersPage = (isLoggedIn, errorMessage, res, req) => {
+  res.render("users/index", {
+    isLoggedIn: isLoggedIn,
+    errorMessage: errorMessage,
+  });
+};
 
 module.exports = router;

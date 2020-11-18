@@ -4,7 +4,7 @@ const Plant = require("../models/plant");
 router.get("/", async (req, res) => {
   let plants;
   try {
-    plants = await Plant.find().sort({ createAt: "desc" }).limit(10).exec();
+    plants = await Plant.find().sort({ createdAt: "Asc" }).limit(10).exec();
   } catch {
     plants = [];
   }

@@ -11,7 +11,6 @@ const bcrypt = require("bcrypt"); //is needed?`
 const session = require("express-session"); // is needed?
 
 const indexRouter = require("./routes/index");
-const authorRouter = require("./routes/authors");
 const plantRouter = require("./routes/plants");
 const userRouter = require("./routes/users");
 
@@ -39,7 +38,6 @@ app.use(
 app.use(expressLayouts);
 app.use(express.static("public"));
 app.use("/", indexRouter);
-app.use("/authors", authorRouter);
 app.use("/plants", plantRouter);
 app.use("/users", userRouter);
 app.listen(process.env.PORT || 3000);

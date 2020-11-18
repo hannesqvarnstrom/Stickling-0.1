@@ -1,10 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const Plant = require("../models/plant"); //
-const Author = require("../models/author");
 const User = require("../models/user");
 const imageMimeTypes = ["image/jpeg", "image/png", "image/gif"];
-// const plantFamilies = require("/views/plants/_plantFamilies.ejs");
 //new plant route
 router.get("/new", async (req, res) => {
   renderNewPage(res, req, new Plant());
@@ -16,12 +14,9 @@ router.get("/", async (req, res) => {
     query = query.regex("name", new RegExp(req.query.name, "i"));
   }
   if (req.query.publishedBefore != null && req.query.publishedBefore != "") {
-    //REMOVE OR KEEP? I DONT KNOW!!!!!!
     query = query.lte("publishDate", req.query.publishedBefore);
   }
-
   if (req.query.publishedAfter != null && req.query.publishedAfter != "") {
-    //REMOVE OR KEEP?! I DONT KNOW!!!!
     query = query.gte("publishDate", req.query.publishedAfter);
   }
   if (req.query.latinName != null && req.query.latinName !== "") {
@@ -123,9 +118,9 @@ router.put("/:id", async (req, res) => {
   try {
     plant = await Plant.findById(req.params.id);
     plant.name = req.body.name;
-    (plant.latinName = req.body.latinName),
-      (plant.family = req.body.family),
-      (plant.author = req.body.author);
+    plant.latinName = req.body.latinName;
+    plant.family = req.body.family;
+    plant.user = req.body.user;
     plant.plantedDate = new Date(req.body.plantedDate);
     plant.description = req.body.description;
     if (req.body.cover != null && req.body.cover !== "") {
