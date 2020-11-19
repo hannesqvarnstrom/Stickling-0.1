@@ -2555,20 +2555,13 @@ const plantList = [
   "Baill.",
   "",
 ];
-
-const regex = /^[a-zA-Z]+$/;
-
-let stringArr = [];
-plantList.forEach((index) => {
-  if (index.match(regex) != null) {
-    stringArr.push(index);
-  }
-});
-let plantArray = [];
+let acanthaceae = [];
 plantList.shift();
 plantList.shift();
 plantList.forEach((item, i) => {
   if (i % 5 == 0) {
-    plantArray.push(item);
+    acanthaceae.push(item);
   }
 });
+
+export { acanthaceae as default };

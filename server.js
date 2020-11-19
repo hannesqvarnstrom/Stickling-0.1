@@ -25,7 +25,7 @@ db.once("open", () => console.log("Connected to Mongoose"));
 app.set("view engine", "ejs");
 app.set("views", __dirname + "/views");
 app.set("layout", "layouts/layout");
-app.use(bodyParser.urlencoded({ limit: "10mb", extended: false }));
+app.use(bodyParser.urlencoded({ limit: "10mb", extended: false })); //if requests via url can be other things than strings, set this to true.
 app.use(methodOverride("_method"));
 app.use(
   session({
