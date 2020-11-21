@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const Plant = require("../models/plant"); //
 const User = require("../models/user");
+const fetch = require("node-fetch");
 const imageMimeTypes = ["image/jpeg", "image/png", "image/gif"];
 //new plant route
 router.get("/new", async (req, res) => {
@@ -76,6 +77,62 @@ router.post("/", async (req, res) => {
     renderNewPage(res, req, plant, true);
   }
 });
+router.get("/find_trefle", async (req, res) => {
+  // const q = "&q=" + req.body.query;
+  const q = "&q=magnifica";
+  const url = "https://trefle.io/api/v1/plants/search?";
+  const tokenString = "token=IydbibZ1RCNb3BFiyssTNAMnaKY1E-Po0fMXDKrF6t8";
+  console.log(await iterateQuery(res, req, [], url, tokenString, q));
+  // const response = await fetch(`${url}${tokenString}${q}`);
+
+  //MAKE A RECURSIVE FUNCTION THAT USES THE NEXT FUNCTION WHICH IS ON ALL RESULTS TO CALL ITSELF AND POPULATE A RESULT ARRAY
+  // const json = await response.json();
+  // const plantsArray = json.data;
+  // console.log(plantsArray);
+  // res.render("plants/find_trefle", {
+  //   plantsArray: plantsArray,
+  // });
+});
+
+async function iterateQuery(res, req, arr, url, tokenString, q) {
+  let returnArr = arr;
+  const promise = await fetch(`${url}${tokenString}${q}`);
+  const jsonObj = await promise.json().then((json) => json);
+  // console.log(jsonObj);
+  // console.log(Array.isArray(jsonObj.data));
+  jsonObj.data.forEach((plant) => returnArr.push(plant));
+  // console.log(jsonObj.links.next);
+  let pageString = jsonObj.links.next.substr();
+  //WE NEED A FUNCTION THAT ASSEMBLES THE URL. WE SHOULD CALL IT ALL THE TIME, IT SHOULD TAKE A BOOLEAN WHICH CHECKS FOR NEXT PAGE.
+  if (jsonObj.links.next !== undefined) {
+    returnArr = iterateQuery(
+      res,
+      req,
+      returnArr,
+      `https://trefle.io${jsonObj.links.next}`,
+      tokenString,
+      q
+    );
+  } else {
+    console.log("no next");
+    return returnArr;
+  }
+
+  // console.log(json.data);
+
+  // console.log(jsonData);
+  // if (jsonData.next != null) {
+  //   console.log("there is a next function");
+  // }
+  // console.log(promise);
+  // const response = await promise.then((res) => res.json());
+  // const jsonData = await response.then((data) => data);
+  // console.log(jsonData);
+  // if (response.next != null) {
+  //   console.log(response.next);
+  // }
+  // return arr;
+}
 //show plant route
 router.get("/:id", async (req, res) => {
   try {

@@ -1,0 +1,34 @@
+<h1>Results</h1>
+<div class="search-result-container">
+  <div class="card">
+    <table>
+      <tbody>
+        <% plantsArray.forEach(plant => { %>
+        <table>
+          <tr>
+            <th>Scientific Name</th>
+            <td><%=plant["scientific_name"]%></td>
+          </tr>
+          <tr>
+            <th>Common Name</th>
+            <td><%=plant["common_name"]%></td>
+          </tr>
+          <tr>
+            <th>Genus</th>
+            <td><%=plant.genus%></td>
+          </tr>
+          <tr>
+            <th>Family</th>
+            <td><%=plant.family%></td>
+          </tr>
+          <tr>
+            <th>Family Common Name</th>
+            <td><%=plant["family_common_name"]%></td>
+          </tr>
+        </table>
+        <img src="<%=plant["image_url"]%>" title="Image of <%=plant["scientific_name"]%>"
+        alt="Image of <%=plant["scientific_name"]%>" height="200" width="150"><% })%>
+      </tbody>
+    </table>
+  </div>
+</div>
