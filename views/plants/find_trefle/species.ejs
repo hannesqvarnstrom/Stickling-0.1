@@ -13,6 +13,10 @@ startAt = lastPage.indexOf('=') + 1; const lastPageNumber = lastPage.substr(star
 (stopAt-startAt));%>
 <h2>Results</h1>
 <div class="search-result-container plant-search">
+  <% if (locals.individuals != undefined){individuals.forEach(plant => {
+
+    
+  })}
   <% if (locals.results != undefined){results.data.forEach(plant => { %>
   <div class="card plantcard">
     <h3>Scientific Name</h3>

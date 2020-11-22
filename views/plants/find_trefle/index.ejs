@@ -31,6 +31,22 @@ undefined) {%>
 <%}}%>
 <a href="/plants/find_trefle/<%=locals.origSearchTerm%>/1">Species</a>
 <div class="search-result-container plant-search">
+  <h3>Individuals</h3>
+  <% if (locals.individuals != undefined){individuals.forEach(plant => {%>
+  <div class="card plantcard">
+    <h3>Scientific Name</h3>
+    <a href="/plants/<%= plant.id %>"><%=plant.name%></a>
+    <img
+      src="<%=plant.coverImagePath%>"
+      height="200"
+      width="150"
+      class="thumbnail"
+      alt=""
+    />
+  </div>
+  <%})}%>
+</div>
+<div class="search-result-container plant-search">
   <% if (locals.resultsSpecies != undefined){ resultsSpecies.data.forEach((plant, i) => {
   if (plant == resultsSpecies.data[0] || plant == resultsSpecies.data[1] || plant ==
   resultsSpecies.data[2]){ %>

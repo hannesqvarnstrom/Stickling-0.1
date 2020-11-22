@@ -113,8 +113,11 @@ router.get("/find_trefle", async (req, res) => {
     const isNext = resultsSpecies.links.next !== undefined;
     let number = 0;
     if (isNext) number = 1;
-    console.log(resultsGenus.data);
+    // console.log(resultsGenus.data);
+    let query = query.regex("name", new RegExp(req.query.searchTerm, "i"));
+    const individuals = query.exec();
     res.render("plants/find_trefle/index", {
+      individuals,
       searchTerm,
       origSearchTerm: req.query.searchTerm,
       resultsSpecies,
