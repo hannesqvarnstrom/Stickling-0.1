@@ -1,0 +1,53 @@
+<h1>Form for searching for plants</h1>
+<form method="GET" action="/plants/find_trefle">
+  <label for="query">Input search query here:</label>
+  <input
+    type="text"
+    name="searchTerm"
+    value="<%if (locals.origSearchTerm !== undefined) {%><%=origSearchTerm%><%}%>"
+  />
+  <button type="submit">Submit</button>
+</form>
+<!-- here display all search results in respective category box -->
+<h2>Results</h2>
+<% if (locals.resultsGenus != undefined){ if (locals.resultsGenus.data != undefined) {%>
+<h3>Genus</h3>
+<div class="btn btn-primary">
+  <h3>Name</h3>
+  <p><%=locals.resultsGenus.data["name"]%></p>
+  <h3>Family</h3>
+  <p><%=locals.resultsGenus.data.family.name%></p>
+  <a href="#">Species</a>
+</div>
+<%}}%> <% if (locals.resultsFamilies != undefined){ if (locals.resultsFamilies.data !=
+undefined) {%>
+<h3>Family</h3>
+<div class="btn btn-danger">
+  <h3>Name</h3>
+  <p><%=locals.resultsFamilies.data["name"]%></p>
+  <h3>Common Name</h3>
+  <p><%=locals.resultsFamilies.data["common_name"]%></p>
+</div>
+<%}}%>
+<a href="/plants/find_trefle/<%=locals.origSearchTerm%>/1">Species</a>
+<div class="search-result-container plant-search">
+  <% if (locals.resultsSpecies != undefined){ resultsSpecies.data.forEach((plant, i) => {
+  if (plant == resultsSpecies.data[0] || plant == resultsSpecies.data[1] || plant ==
+  resultsSpecies.data[2]){ %>
+  <div class="card plantcard">
+    <h3>Scientific Name</h3>
+
+    <p><%=plant["scientific_name"]%></p>
+    <h3>Common Name</h3>
+    <p><%=plant["common_name"]%></p>
+    <h3>Genus</h3>
+    <p><%=plant.genus%></p>
+    <h3>Family</h3>
+    <p><%=plant.family%></p>
+    <h3>Family Common Name</h3>
+    <p><%=plant["family_common_name"]%></p>
+    <img src="<%=plant["image_url"]%>" title="Image of <%=plant["scientific_name"]%>"
+    alt="Image of <%=plant["scientific_name"]%>" height="200" width="150">
+  </div>
+  <%}})}%>
+</div>

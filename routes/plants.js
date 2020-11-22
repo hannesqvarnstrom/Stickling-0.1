@@ -77,33 +77,64 @@ router.post("/", async (req, res) => {
     renderNewPage(res, req, plant, true);
   }
 });
+
 router.get("/find_trefle", async (req, res) => {
   console.log(req.query.searchTerm);
   if (req.query.searchTerm != undefined) {
     const searchTerm = "&q=" + req.query.searchTerm;
-    const url = "https://trefle.io/api/v1/plants/search?";
+    const urlSpecies = "https://trefle.io/api/v1/plants/search?";
     const tokenString = "token=IydbibZ1RCNb3BFiyssTNAMnaKY1E-Po0fMXDKrF6t8";
-    const results = await doQuery(res, req, url, tokenString, searchTerm);
-    const isNext = results.links.next !== undefined;
+    const resultsSpecies = await doQuery(
+      res,
+      req,
+      urlSpecies,
+      tokenString,
+      searchTerm,
+      "species"
+    );
+    const urlGenus = "https://trefle.io/api/v1/genus/";
+    const resultsGenus = await doQuery(
+      res,
+      req,
+      urlGenus,
+      tokenString,
+      req.query.searchTerm,
+      "genus"
+    );
+    const urlFamilies = "https://trefle.io/api/v1/families/";
+    const resultsFamilies = await doQuery(
+      res,
+      req,
+      urlFamilies,
+      tokenString,
+      req.query.searchTerm,
+      "families"
+    );
+    const isNext = resultsSpecies.links.next !== undefined;
     let number = 0;
     if (isNext) number = 1;
-    res.render("plants/find_trefle", {
+    console.log(resultsGenus.data);
+    res.render("plants/find_trefle/index", {
       searchTerm,
       origSearchTerm: req.query.searchTerm,
-      results,
+      resultsSpecies,
+      resultsGenus,
+      resultsFamilies,
       isNext,
       number,
+      isLoggedIn: req.session.userId != null,
     });
   } else {
     console.log("query is undefined");
-    res.render("plants/find_trefle");
+    res.render("plants/find_trefle/index", {
+      isLoggedIn: req.session.userId != null,
+    });
   }
 });
 
 //after search, results are loaded and the first 3 results for each category
 //are displayed in a box with a link to page one of the search result
 //more than one get route?
-
 router.get("/find_trefle/:query/:number", async (req, res) => {
   console.log("find_trefle/query/number is this one");
   const q = "&q=" + req.params.query;
@@ -112,14 +143,15 @@ router.get("/find_trefle/:query/:number", async (req, res) => {
   const url = "https://trefle.io/api/v1/plants/search?page=" + number + "&";
   const tokenString = "token=IydbibZ1RCNb3BFiyssTNAMnaKY1E-Po0fMXDKrF6t8";
   try {
-    const results = await doQuery(res, req, url, tokenString, q);
+    const results = await doQuery(res, req, url, tokenString, q, "species");
     const isNext = results.links.next !== undefined;
     console.log(results.links.next);
-    res.render("plants/find_trefle", {
+    res.render("plants/find_trefle/species", {
       number,
       origSearchTerm: req.params.query,
       results,
       isNext,
+      isLoggedIn: req.session.userId != null,
     });
   } catch (err) {
     console.log(err);
@@ -139,10 +171,29 @@ function renderSearchResults(res, req, currentPage, isNext, resultsArr, url, q) 
   });
 }
 
-async function doQuery(res, req, url, tokenString, q) {
-  const jsonObject = await fetch(`${url}${tokenString}${q}`)
-    .then((resp) => resp.json())
-    .then((json) => json);
+async function doQuery(res, req, url, tokenString, q, typeString) {
+  let jsonObject;
+  switch (typeString) {
+    case "species":
+      jsonObject = await fetch(`${url}${tokenString}${q}`)
+        .then((resp) => resp.json())
+        .then((json) => json);
+      return jsonObject;
+
+    case "genus":
+      jsonObject = await fetch(`${url}${q}?&${tokenString}`)
+        .then((resp) => resp.json())
+        .then((json) => json);
+      return jsonObject;
+    case "families":
+      jsonObject = await fetch(`${url}${q}?&${tokenString}`)
+        .then((resp) => resp.json())
+        .then((json) => json);
+      return jsonObject;
+    default:
+      break;
+  }
+  console.log(jsonObject);
   return jsonObject;
 }
 async function iterateQuery(res, req, arr, url, tokenString, q) {
