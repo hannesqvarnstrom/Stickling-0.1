@@ -78,22 +78,73 @@ router.post("/", async (req, res) => {
   }
 });
 router.get("/find_trefle", async (req, res) => {
-  // const q = "&q=" + req.body.query;
-  const q = "&q=magnifica";
-  const url = "https://trefle.io/api/v1/plants/search?";
-  const tokenString = "token=IydbibZ1RCNb3BFiyssTNAMnaKY1E-Po0fMXDKrF6t8";
-  console.log(await iterateQuery(res, req, [], url, tokenString, q));
-  // const response = await fetch(`${url}${tokenString}${q}`);
-
-  //MAKE A RECURSIVE FUNCTION THAT USES THE NEXT FUNCTION WHICH IS ON ALL RESULTS TO CALL ITSELF AND POPULATE A RESULT ARRAY
-  // const json = await response.json();
-  // const plantsArray = json.data;
-  // console.log(plantsArray);
-  // res.render("plants/find_trefle", {
-  //   plantsArray: plantsArray,
-  // });
+  console.log(req.query.searchTerm);
+  if (req.query.searchTerm != undefined) {
+    const searchTerm = "&q=" + req.query.searchTerm;
+    const url = "https://trefle.io/api/v1/plants/search?";
+    const tokenString = "token=IydbibZ1RCNb3BFiyssTNAMnaKY1E-Po0fMXDKrF6t8";
+    const results = await doQuery(res, req, url, tokenString, searchTerm);
+    const isNext = results.links.next !== undefined;
+    let number = 0;
+    if (isNext) number = 1;
+    res.render("plants/find_trefle", {
+      searchTerm,
+      origSearchTerm: req.query.searchTerm,
+      results,
+      isNext,
+      number,
+    });
+  } else {
+    console.log("query is undefined");
+    res.render("plants/find_trefle");
+  }
 });
 
+//after search, results are loaded and the first 3 results for each category
+//are displayed in a box with a link to page one of the search result
+//more than one get route?
+
+router.get("/find_trefle/:query/:number", async (req, res) => {
+  console.log("find_trefle/query/number is this one");
+  const q = "&q=" + req.params.query;
+  const number = req.params.number;
+  console.log(number);
+  const url = "https://trefle.io/api/v1/plants/search?page=" + number + "&";
+  const tokenString = "token=IydbibZ1RCNb3BFiyssTNAMnaKY1E-Po0fMXDKrF6t8";
+  try {
+    const results = await doQuery(res, req, url, tokenString, q);
+    const isNext = results.links.next !== undefined;
+    console.log(results.links.next);
+    res.render("plants/find_trefle", {
+      number,
+      origSearchTerm: req.params.query,
+      results,
+      isNext,
+    });
+  } catch (err) {
+    console.log(err);
+    res.render("plants/find_trefle", {
+      errorMessage: "Something went wrong in your search",
+    });
+  }
+});
+
+function renderSearchResults(res, req, currentPage, isNext, resultsArr, url, q) {
+  //token?
+  res.render("plants/find_trefle", {
+    resultsArr: resultsArr,
+    currentPage: currentPage,
+    isNext: isNext,
+    q: q,
+  });
+}
+
+async function doQuery(res, req, url, tokenString, q) {
+  const jsonObject = await fetch(`${url}${tokenString}${q}`)
+    .then((resp) => resp.json())
+    .then((json) => json);
+  return jsonObject;
+}
 async function iterateQuery(res, req, arr, url, tokenString, q) {
   let returnArr = arr;
   const promise = await fetch(`${url}${tokenString}${q}`);
