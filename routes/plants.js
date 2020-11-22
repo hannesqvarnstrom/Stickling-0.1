@@ -80,7 +80,7 @@ router.post("/", async (req, res) => {
 
 router.get("/find_trefle", async (req, res) => {
   console.log(req.query.searchTerm);
-  if (req.query.searchTerm != undefined) {
+  if (req.query.searchTerm != undefined && req.query.searchTerm != "") {
     const searchTerm = "&q=" + req.query.searchTerm;
     const urlSpecies = "https://trefle.io/api/v1/plants/search?";
     const tokenString = "token=IydbibZ1RCNb3BFiyssTNAMnaKY1E-Po0fMXDKrF6t8";
@@ -110,12 +110,15 @@ router.get("/find_trefle", async (req, res) => {
       req.query.searchTerm,
       "families"
     );
-    const isNext = resultsSpecies.links.next !== undefined;
+    let isNext = resultsSpecies.links.next !== undefined;
+
     let number = 0;
     if (isNext) number = 1;
     // console.log(resultsGenus.data);
-    let query = query.regex("name", new RegExp(req.query.searchTerm, "i"));
-    const individuals = query.exec();
+    let query = Plant.find();
+    query = query.regex("name", new RegExp(req.query.searchTerm, "i"));
+    const individuals = await query.exec();
+    console.log(individuals);
     res.render("plants/find_trefle/index", {
       individuals,
       searchTerm,

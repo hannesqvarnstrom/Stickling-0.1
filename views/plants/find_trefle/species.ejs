@@ -13,10 +13,7 @@ startAt = lastPage.indexOf('=') + 1; const lastPageNumber = lastPage.substr(star
 (stopAt-startAt));%>
 <h2>Results</h1>
 <div class="search-result-container plant-search">
-  <% if (locals.individuals != undefined){individuals.forEach(plant => {
 
-    
-  })}
   <% if (locals.results != undefined){results.data.forEach(plant => { %>
   <div class="card plantcard">
     <h3>Scientific Name</h3>
@@ -42,7 +39,7 @@ startAt = lastPage.indexOf('=') + 1; const lastPageNumber = lastPage.substr(star
   ><%}%> <% if (locals.isNext){ %>
   <a><%=number%></a>
   <a href="/plants/find_trefle/<%=origSearchTerm%>/<%=(parseInt(number) + 1)%>"
-    >Next<%=//(parseInt(number) + 1)%></a
+    >Next</a
   >
   ... <%}%> <% if (number != lastPageNumber && number != 0) {%>
   <a href="/plants/find_trefle/<%=origSearchTerm%>/<%=lastPageNumber%>">
