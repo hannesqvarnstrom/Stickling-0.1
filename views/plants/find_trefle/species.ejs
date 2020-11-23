@@ -1,50 +1,11 @@
-<h1>Form for searching for plants</h1>
-<form method="GET" action="/plants/find_trefle">
-  <label for="query">Input search query here:</label>
-  <input
-    type="text"
-    name="searchTerm"
-    value="<%if (locals.origSearchTerm !== undefined) {%><%=origSearchTerm%><%}%>"
-  />
-  <button type="submit">Submit</button>
-</form>
-<% const lastPage = results.links.last; const stopAt = lastPage.indexOf('&'); const
-startAt = lastPage.indexOf('=') + 1; const lastPageNumber = lastPage.substr(startAt,
-(stopAt-startAt));%>
-<h2>Results</h1>
-<div class="search-result-container plant-search">
+<h1><%=plant["scientific_name"]%></h1>
+<% if (plant["common_name"] != null) {%>
+<h2>Also known as <%=plant["common_name"]%></h2>
+<%}%>
 
-  <% if (locals.results != undefined){results.data.forEach(plant => { %>
-  <div class="card plantcard">
-    <h3>Scientific Name</h3>
+<a href="<% %>" class="btn btn-primary">See family</a>
+<a href="<% %>" class="btn btn-primary">See genus</a>
+<a href="<% %>" class="btn btn-primary">See all individuals born from this species</a>
 
-    <p><%=plant["scientific_name"]%></p> <h3>Common Name</h3> <p><%=plant["common_name"]%></p> <h3>Genus</h3>
-    <p><%=plant.genus%></p> <h3>Family</h3> <p><%=plant.family%> <h3>Family Common Name</h3>
-    <p><%=plant["family_common_name"]%></p> <img src="<%=plant["image_url"]%>" title="Image of
-    <%=plant["scientific_name"]%>" alt="Image of <%=plant["scientific_name"]%>"
-    height="200" width="150">
-  </div>
-  <% })}%>
-  <!-- </tbody>
-    </table>
-  </div> -->
-</div>
-
-<section id="pagination">
-  <% if (number>1) {%>
-  <a href="/plants/find_trefle/<%=origSearchTerm%>/1">1</a>
-
-  <a href="/plants/find_trefle/<%=origSearchTerm%>/<%=(parseInt(number) - 1 )%>"
-    >Previous</a
-  ><%}%> <% if (locals.isNext){ %>
-  <a><%=number%></a>
-  <a href="/plants/find_trefle/<%=origSearchTerm%>/<%=(parseInt(number) + 1)%>"
-    >Next</a
-  >
-  ... <%}%> <% if (number != lastPageNumber && number != 0) {%>
-  <a href="/plants/find_trefle/<%=origSearchTerm%>/<%=lastPageNumber%>">
-    <%=lastPageNumber %></a
-  >
-  <%} else if (number != 0){%>
-  <a><%=lastPageNumber %></a><%}%>
-</section>
+<a href="<% %>" class="btn btn-danger">View all users growing this</a>
+<a href="<% %>" class="btn btn-danger">View all users requesting this</a>

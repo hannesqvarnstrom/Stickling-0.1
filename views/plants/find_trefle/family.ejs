@@ -1,0 +1,18 @@
+<h1><%=family.name%></h1>
+<h2>Also known as <%=family["common_name"]%></h2>
+
+<a
+  href="/plants/find_trefle/family/<%= family.name%>/genus/<%=family.id%>"
+  class="btn btn-primary"
+  >See all genus in family</a
+>
+<a
+  href="/plants/find_trefle/family/<%= family.name%>/plants/<%=family.id%>"
+  class="btn btn-primary"
+  >See all species in family</a
+>
+<a
+  href="/plants/find_trefle/family/<%= family.name%>/indiv/<%=family.id%>"
+  class="btn btn-primary"
+  >See all individuals in family</a
+>

@@ -24,7 +24,9 @@ undefined) {%>
 <h3>Family</h3>
 <div class="btn btn-danger">
   <h3>Name</h3>
-  <p><%=locals.resultsFamilies.data["name"]%></p>
+  <a href="/plants/find_trefle/family/<%=locals.resultsFamilies.data.id%>"
+    ><%=locals.resultsFamilies.data["name"]%></a
+  >
   <h3>Common Name</h3>
   <p><%=locals.resultsFamilies.data["common_name"]%></p>
 </div>

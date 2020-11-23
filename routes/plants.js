@@ -78,6 +78,7 @@ router.post("/", async (req, res) => {
   }
 });
 
+//main search route for all searches, by simple query
 router.get("/find_trefle", async (req, res) => {
   console.log(req.query.searchTerm);
   if (req.query.searchTerm != undefined && req.query.searchTerm != "") {
@@ -138,9 +139,53 @@ router.get("/find_trefle", async (req, res) => {
   }
 });
 
-//after search, results are loaded and the first 3 results for each category
-//are displayed in a box with a link to page one of the search result
-//more than one get route?
+router.get("/find_trefle/family/:id", async (req, res) => {
+  let jsonObj;
+  const response = await fetch(
+    `https://trefle.io/api/v1/families/${req.params.id}?&token=IydbibZ1RCNb3BFiyssTNAMnaKY1E-Po0fMXDKrF6t8&`
+  )
+    .then((resp) => resp.json())
+    .then((json) => (jsonObj = json));
+  console.log(jsonObj);
+  res.render("plants/find_trefle/family", {
+    family: jsonObj.data,
+    isLoggedIn: req.session.userId != null,
+  });
+});
+router.get("/find_trefle/family/:family/:query/:id", async (req, res) => {
+  let familyQ = "";
+  let url = `https://trefle.io/api/v1/${req.params.query}/?&token=IydbibZ1RCNb3BFiyssTNAMnaKY1E-Po0fMXDKrF6t8&`;
+  switch (req.params.query) {
+    case "plants":
+      familyQ = `filter[family_name]=${req.params.family}`;
+      break;
+    case "genus":
+      familyQ = `filter[family_id]=${req.params.id}`;
+      break;
+    case "indiv":
+      break;
+    default:
+      break;
+  }
+  let jsonObj;
+  const famReq = await fetch(url + familyQ)
+    .then((resp) => resp.json())
+    .then((json) => (jsonObj = json));
+  const isNext = jsonObj.links.next !== undefined;
+  let number = 0;
+  if (isNext) number = 1;
+
+  res.render("plants/find_trefle/view_by", {
+    family: req.params.family,
+    query: req.params.query,
+    isLoggedIn: req.session.userId != null,
+    isNext,
+    number,
+    results: jsonObj.data,
+  });
+});
+
+//route for next page in search query for species
 router.get("/find_trefle/:query/:number", async (req, res) => {
   console.log("find_trefle/query/number is this one");
   const q = "&q=" + req.params.query;
@@ -152,7 +197,7 @@ router.get("/find_trefle/:query/:number", async (req, res) => {
     const results = await doQuery(res, req, url, tokenString, q, "species");
     const isNext = results.links.next !== undefined;
     console.log(results.links.next);
-    res.render("plants/find_trefle/species", {
+    res.render("plants/find_trefle/search", {
       number,
       origSearchTerm: req.params.query,
       results,
@@ -166,16 +211,6 @@ router.get("/find_trefle/:query/:number", async (req, res) => {
     });
   }
 });
-
-function renderSearchResults(res, req, currentPage, isNext, resultsArr, url, q) {
-  //token?
-  res.render("plants/find_trefle", {
-    resultsArr: resultsArr,
-    currentPage: currentPage,
-    isNext: isNext,
-    q: q,
-  });
-}
 
 async function doQuery(res, req, url, tokenString, q, typeString) {
   let jsonObject;
@@ -202,45 +237,28 @@ async function doQuery(res, req, url, tokenString, q, typeString) {
   console.log(jsonObject);
   return jsonObject;
 }
-async function iterateQuery(res, req, arr, url, tokenString, q) {
-  let returnArr = arr;
-  const promise = await fetch(`${url}${tokenString}${q}`);
-  const jsonObj = await promise.json().then((json) => json);
-  // console.log(jsonObj);
-  // console.log(Array.isArray(jsonObj.data));
-  jsonObj.data.forEach((plant) => returnArr.push(plant));
-  // console.log(jsonObj.links.next);
-  let pageString = jsonObj.links.next.substr();
-  //WE NEED A FUNCTION THAT ASSEMBLES THE URL. WE SHOULD CALL IT ALL THE TIME, IT SHOULD TAKE A BOOLEAN WHICH CHECKS FOR NEXT PAGE.
-  if (jsonObj.links.next !== undefined) {
-    returnArr = iterateQuery(
-      res,
-      req,
-      returnArr,
-      `https://trefle.io${jsonObj.links.next}`,
-      tokenString,
-      q
-    );
-  } else {
-    console.log("no next");
-    return returnArr;
-  }
 
-  // console.log(json.data);
-
-  // console.log(jsonData);
-  // if (jsonData.next != null) {
-  //   console.log("there is a next function");
-  // }
-  // console.log(promise);
-  // const response = await promise.then((res) => res.json());
-  // const jsonData = await response.then((data) => data);
-  // console.log(jsonData);
-  // if (response.next != null) {
-  //   console.log(response.next);
-  // }
-  // return arr;
-}
+//this is an old function that is not used anymore, since the urls are different we needed a switch statement
+// async function iterateQuery(res, req, arr, url, tokenString, q) {
+//   let returnArr = arr;
+//   const promise = await fetch(`${url}${tokenString}${q}`);
+//   const jsonObj = await promise.json().then((json) => json);
+//   jsonObj.data.forEach((plant) => returnArr.push(plant));
+//   let pageString = jsonObj.links.next.substr();
+//   if (jsonObj.links.next !== undefined) {
+//     returnArr = iterateQuery(
+//       res,
+//       req,
+//       returnArr,
+//       `https://trefle.io${jsonObj.links.next}`,
+//       tokenString,
+//       q
+//     );
+//   } else {
+//     console.log("no next");
+//     return returnArr;
+//   }
+// }
 //show plant route
 router.get("/:id", async (req, res) => {
   try {

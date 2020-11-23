@@ -1,0 +1,16 @@
+<h1><%= family%></h1>
+<h2>All <%=query%> within <%=family%></h2>
+
+<h3><%=query%></h3>
+<div class="search-result-container">
+  <% results.forEach(pos => {%>
+  <div class="card">
+    <% if (query == "genus"){%>
+    <a href="#"><%=pos.name%></a>
+    <%} else {%>
+    <a href="#"><%=pos["scientific_name"]%></a>
+    <p>(a.k.a <%= pos["common_name"]%></p>
+    <%}%>
+  </div>
+  <%})%>
+</div>
