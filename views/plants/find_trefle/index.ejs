@@ -1,4 +1,4 @@
-<h1>Form for searching for plants</h1>
+<h1>Form for searching for plants eeee</h1>
 <form method="GET" action="/plants/find_trefle">
   <label for="query">Input search query here:</label>
   <input
@@ -14,10 +14,9 @@
 <h3>Genus</h3>
 <div class="btn btn-primary">
   <h3>Name</h3>
-  <p><%=locals.resultsGenus.data["name"]%></p>
-  <h3>Family</h3>
-  <p><%=locals.resultsGenus.data.family.name%></p>
-  <a href="#">Species</a>
+  <a href="/plants/find_trefle/genus/<%=locals.resultsGenus.data.id%>"
+    ><%=locals.resultsGenus.data["name"]%></a
+  >
 </div>
 <%}}%> <% if (locals.resultsFamilies != undefined){ if (locals.resultsFamilies.data !=
 undefined) {%>
@@ -30,8 +29,10 @@ undefined) {%>
   <h3>Common Name</h3>
   <p><%=locals.resultsFamilies.data["common_name"]%></p>
 </div>
-<%}}%>
-<a href="/plants/find_trefle/<%=locals.origSearchTerm%>/1">Species</a>
+<%}}%> <% if (locals.resultsSpecies != undefined){%>
+<a class="btn btn-danger" href="/plants/find_trefle/<%=locals.origSearchTerm%>/1"
+  >Species</a
+>
 <div class="search-result-container plant-search">
   <h3>Individuals</h3>
   <% if (locals.individuals != undefined){individuals.forEach(plant => {%>
@@ -55,13 +56,13 @@ undefined) {%>
   <div class="card plantcard">
     <h3>Scientific Name</h3>
 
-    <p><%=plant["scientific_name"]%></p>
+    <a><%=plant["scientific_name"]%></a>
     <h3>Common Name</h3>
     <p><%=plant["common_name"]%></p>
     <h3>Genus</h3>
-    <p><%=plant.genus%></p>
+    <a><%=plant.genus%></a>
     <h3>Family</h3>
-    <p><%=plant.family%></p>
+    <a><%=plant.family%></a>
     <h3>Family Common Name</h3>
     <p><%=plant["family_common_name"]%></p>
     <img src="<%=plant["image_url"]%>" title="Image of <%=plant["scientific_name"]%>"
@@ -69,3 +70,4 @@ undefined) {%>
   </div>
   <%}})}%>
 </div>
+<%}%>

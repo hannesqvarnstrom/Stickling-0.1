@@ -120,6 +120,7 @@ router.get("/find_trefle", async (req, res) => {
     query = query.regex("name", new RegExp(req.query.searchTerm, "i"));
     const individuals = await query.exec();
     console.log(individuals);
+    console.log(resultsSpecies.data);
     res.render("plants/find_trefle/index", {
       individuals,
       searchTerm,
@@ -174,17 +175,51 @@ router.get("/find_trefle/family/:family/:query/:id", async (req, res) => {
   const isNext = jsonObj.links.next !== undefined;
   let number = 0;
   if (isNext) number = 1;
-
+  console.log(jsonObj.data);
   res.render("plants/find_trefle/view_by", {
     family: req.params.family,
     query: req.params.query,
     isLoggedIn: req.session.userId != null,
     isNext,
     number,
-    results: jsonObj.data,
+    resultsObj: jsonObj,
+  });
+});
+router.get("/find_trefle/genus/:id", async (req, res) => {
+  let jsonObj;
+  const response = await fetch(
+    `https://trefle.io/api/v1/genus/${req.params.id}?&token=IydbibZ1RCNb3BFiyssTNAMnaKY1E-Po0fMXDKrF6t8&`
+  )
+    .then((resp) => resp.json())
+    .then((json) => (jsonObj = json));
+  console.log("genrsus/id is this one");
+  res.render("plants/find_trefle/genus", {
+    genus: jsonObj.data,
+    isLoggedIn: req.session.userId != null,
   });
 });
 
+router.get("/find_trefle/genus/:genus/:query/:id", async (req, res) => {
+  let genusQ = "";
+  let url = `https://trefle.io/api/v1/${req.params.query}/?&token=IydbibZ1RCNb3BFiyssTNAMnaKY1E-Po0fMXDKrF6t8&`;
+  genusQ = `filter[genus_name]=` + req.params.genus;
+  let jsonObj;
+  const genusReq = await fetch(url + genusQ)
+    .then((resp) => resp.json())
+    .then((json) => (jsonObj = json));
+  const isNext = jsonObj.links.next !== undefined;
+  let number = 0;
+  if (isNext) number = 1;
+  console.log(jsonObj.data);
+  res.render("plants/find_trefle/view_by", {
+    genus: req.params.genus,
+    query: req.params.query,
+    isLoggedIn: req.session.userId != null,
+    isNext,
+    number,
+    resultsObj: jsonObj,
+  });
+});
 //route for next page in search query for species
 router.get("/find_trefle/:query/:number", async (req, res) => {
   console.log("find_trefle/query/number is this one");

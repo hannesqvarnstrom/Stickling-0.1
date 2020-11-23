@@ -1,3 +1,6 @@
+<% const lastPage = resultsObj.links.last; const stopAt = lastPage.indexOf('&'); const
+startAt = lastPage.indexOf('=') + 1; const lastPageNumber = lastPage.substr(startAt,
+(stopAt-startAt)); const results = resultsObj.data%> <% if (locals.family) {%>
 <h1><%= family%></h1>
 <h2>All <%=query%> within <%=family%></h2>
 
@@ -6,7 +9,7 @@
   <% results.forEach(pos => {%>
   <div class="card">
     <% if (query == "genus"){%>
-    <a href="#"><%=pos.name%></a>
+    <a href="/plants/find_trefle/genus/<%=pos.id%>"><%=pos.name%></a>
     <%} else {%>
     <a href="#"><%=pos["scientific_name"]%></a>
     <p>(a.k.a <%= pos["common_name"]%></p>
@@ -14,3 +17,20 @@
   </div>
   <%})%>
 </div>
+<%} else {%>
+<h1><%= genus%></h1>
+<h2>All <%=query%> within <%=genus%></h2>
+
+<h3><%=query%></h3>
+<div class="search-result-container">
+  <% results.forEach(pos => {%>
+  <div class="card">
+    <% if (query == "plants"){%>
+    <a href="/plants/find_trefle/plants/<%=pos.id%>"><%=pos["scientific_name"]%></a>
+    <%} else {%>
+    <a href="#"><%=pos.name%></a>
+    <%}%>
+  </div>
+  <%})%>
+</div>
+<%}%>

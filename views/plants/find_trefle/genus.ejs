@@ -1,5 +1,11 @@
 <h1><%=genus.name%></h1>
-
-<a href="<% %>" class="btn btn-primary">See family</a>
-<a href="<% %>" class="btn btn-primary">See all species in family</a>
-<a href="<% %>" class="btn btn-primary">See all individuals in family</a>
+<!-- data? -->
+<a href="/plants/find_trefle/family/<%= genus.family.id%>" class="btn btn-primary"
+  >See family</a
+>
+<a
+  href="/plants/find_trefle/genus/<%= genus.name%>/plants/<%=genus.id%>"
+  class="btn btn-primary"
+  >See all species in genus</a
+>
+<a href="<% %>" class="btn btn-primary">See all individuals in genus</a>
