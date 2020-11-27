@@ -18,11 +18,11 @@ startAt = lastPage.indexOf('=') + 1; const lastPageNumber = lastPage.substr(star
   <div class="card plantcard">
     <h3>Scientific Name</h3>
 
-    <p><%=plant["scientific_name"]%></p> <h3>Common Name</h3> <p><%=plant["common_name"]%></p> <h3>Genus</h3>
+    <a href="/plants/find_trefle/plants/<%=plant.id%>"><%=plant["scientific_name"]%></a><h3>Common Name</h3> <p><%=plant["common_name"]%></p> <h3>Genus</h3>
     <p><%=plant.genus%></p> <h3>Family</h3> <p><%=plant.family%> <h3>Family Common Name</h3>
-    <p><%=plant["family_common_name"]%></p> <img src="<%=plant["image_url"]%>" title="Image of
+    <p><%=plant["family_common_name"]%></p> <a href="/plants/find_trefle/plants/<%=plant.id%>"><img src="<%=plant["image_url"]%>" title="Image of
     <%=plant["scientific_name"]%>" alt="Image of <%=plant["scientific_name"]%>"
-    height="200" width="150">
+    height="200" width="150"></a>
   </div>
   <% })}%>
   <!-- </tbody>
