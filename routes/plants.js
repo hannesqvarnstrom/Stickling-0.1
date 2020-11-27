@@ -4,6 +4,8 @@ const Plant = require("../models/plant"); //
 const User = require("../models/user");
 const fetch = require("node-fetch");
 const imageMimeTypes = ["image/jpeg", "image/png", "image/gif"];
+const tokenString = "token=IydbibZ1RCNb3BFiyssTNAMnaKY1E-Po0fMXDKrF6t8";
+const baseUrl = "https://trefle.io/api/v1/";
 //new plant route
 router.get("/new", async (req, res) => {
   renderNewPage(res, req, new Plant());
@@ -83,8 +85,8 @@ router.get("/find_trefle", async (req, res) => {
   console.log(req.query.searchTerm);
   if (req.query.searchTerm != undefined && req.query.searchTerm != "") {
     const searchTerm = "&q=" + req.query.searchTerm;
-    const urlSpecies = "https://trefle.io/api/v1/plants/search?";
-    const tokenString = "token=IydbibZ1RCNb3BFiyssTNAMnaKY1E-Po0fMXDKrF6t8";
+    const urlSpecies = `${baseUrl}plants/search?`;
+    // const tokenString = "token=IydbibZ1RCNb3BFiyssTNAMnaKY1E-Po0fMXDKrF6t8";
     const resultsSpecies = await doQuery(
       res,
       req,
@@ -93,7 +95,7 @@ router.get("/find_trefle", async (req, res) => {
       searchTerm,
       "species"
     );
-    const urlGenus = "https://trefle.io/api/v1/genus/";
+    const urlGenus = baseUrl + "/genus/";
     const resultsGenus = await doQuery(
       res,
       req,
@@ -102,7 +104,7 @@ router.get("/find_trefle", async (req, res) => {
       req.query.searchTerm,
       "genus"
     );
-    const urlFamilies = "https://trefle.io/api/v1/families/";
+    const urlFamilies = baseUrl + "families/";
     const resultsFamilies = await doQuery(
       res,
       req,
@@ -139,12 +141,28 @@ router.get("/find_trefle", async (req, res) => {
     });
   }
 });
+//GET PLANT/SPECIES. REMEMBER THAT THIS IS plants/find_trefle/plants/id. which is funny
+router.get("/find_trefle/plants/:id", async (req, res) => {
+  try {
+    console.log("now trying to get plant by id;");
+    const url = baseUrl + "plants/";
+    const id = req.params.id + "?&";
+    // const tokenString = "?&token=IydbibZ1RCNb3BFiyssTNAMnaKY1E-Po0fMXDKrF6t8";
+    let jsonObj;
+    const prom = await fetch(url + id + tokenString)
+      .then((resp) => resp.json())
+      .then((json) => (jsonObj = json));
+    console.log(jsonObj);
+    res.render("plants/find_trefle/species", {
+      isLoggedIn: req.session.userId != null,
+      plant: jsonObj.data,
+    });
+  } catch (e) {}
+});
 
 router.get("/find_trefle/family/:id", async (req, res) => {
   let jsonObj;
-  const response = await fetch(
-    `https://trefle.io/api/v1/families/${req.params.id}?&token=IydbibZ1RCNb3BFiyssTNAMnaKY1E-Po0fMXDKrF6t8&`
-  )
+  const response = await fetch(`${baseUrl}families/${req.params.id}?&${tokenString}`)
     .then((resp) => resp.json())
     .then((json) => (jsonObj = json));
   console.log(jsonObj);
@@ -155,7 +173,7 @@ router.get("/find_trefle/family/:id", async (req, res) => {
 });
 router.get("/find_trefle/family/:family/:query/:id", async (req, res) => {
   let familyQ = "";
-  let url = `https://trefle.io/api/v1/${req.params.query}/?&token=IydbibZ1RCNb3BFiyssTNAMnaKY1E-Po0fMXDKrF6t8&`;
+  let url = `${baseUrl}${req.params.query}/?&${tokenString}&`;
   switch (req.params.query) {
     case "plants":
       familyQ = `filter[family_name]=${req.params.family}`;
@@ -187,9 +205,7 @@ router.get("/find_trefle/family/:family/:query/:id", async (req, res) => {
 });
 router.get("/find_trefle/genus/:id", async (req, res) => {
   let jsonObj;
-  const response = await fetch(
-    `https://trefle.io/api/v1/genus/${req.params.id}?&token=IydbibZ1RCNb3BFiyssTNAMnaKY1E-Po0fMXDKrF6t8&`
-  )
+  const response = await fetch(`${baseUrl}genus/${req.params.id}?&${tokenString}`)
     .then((resp) => resp.json())
     .then((json) => (jsonObj = json));
   console.log("genrsus/id is this one");
@@ -200,9 +216,12 @@ router.get("/find_trefle/genus/:id", async (req, res) => {
 });
 
 router.get("/find_trefle/genus/:genus/:query/:id", async (req, res) => {
+  console.log("now in id query, which is wrong");
   let genusQ = "";
-  let url = `https://trefle.io/api/v1/${req.params.query}/?&token=IydbibZ1RCNb3BFiyssTNAMnaKY1E-Po0fMXDKrF6t8&`;
+  let url = `${baseUrl}${req.params.query}/?&${tokenString}&`;
+
   genusQ = `filter[genus_name]=` + req.params.genus;
+  console.log(url + genusQ);
   let jsonObj;
   const genusReq = await fetch(url + genusQ)
     .then((resp) => resp.json())
@@ -210,7 +229,7 @@ router.get("/find_trefle/genus/:genus/:query/:id", async (req, res) => {
   const isNext = jsonObj.links.next !== undefined;
   let number = 0;
   if (isNext) number = 1;
-  console.log(jsonObj.data);
+  // console.log(jsonObj.data);
   res.render("plants/find_trefle/view_by", {
     genus: req.params.genus,
     query: req.params.query,
@@ -226,8 +245,8 @@ router.get("/find_trefle/:query/:number", async (req, res) => {
   const q = "&q=" + req.params.query;
   const number = req.params.number;
   console.log(number);
-  const url = "https://trefle.io/api/v1/plants/search?page=" + number + "&";
-  const tokenString = "token=IydbibZ1RCNb3BFiyssTNAMnaKY1E-Po0fMXDKrF6t8";
+  const url = baseUrl + "plants/search?page=" + number + "&";
+  // const tokenString = "token=IydbibZ1RCNb3BFiyssTNAMnaKY1E-Po0fMXDKrF6t8";
   try {
     const results = await doQuery(res, req, url, tokenString, q, "species");
     const isNext = results.links.next !== undefined;

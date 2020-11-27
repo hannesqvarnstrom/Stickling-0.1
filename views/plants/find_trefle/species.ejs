@@ -1,10 +1,15 @@
 <h1><%=plant["scientific_name"]%></h1>
+<img src="<%=plant.image_url%>" height="400" width="350" />
 <% if (plant["common_name"] != null) {%>
 <h2>Also known as <%=plant["common_name"]%></h2>
 <%}%>
 
-<a href="<% %>" class="btn btn-primary">See family</a>
-<a href="<% %>" class="btn btn-primary">See genus</a>
+<a href="/plants/find_trefle/family/<%= plant.family.id%>" class="btn btn-primary"
+  >See family</a
+>
+<a href="/plants/find_trefle/genus/<%= plant.genus.id%>" class="btn btn-primary"
+  >See genus</a
+>
 <a href="<% %>" class="btn btn-primary">See all individuals born from this species</a>
 
 <a href="<% %>" class="btn btn-danger">View all users growing this</a>

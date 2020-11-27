@@ -11,7 +11,7 @@ startAt = lastPage.indexOf('=') + 1; const lastPageNumber = lastPage.substr(star
     <% if (query == "genus"){%>
     <a href="/plants/find_trefle/genus/<%=pos.id%>"><%=pos.name%></a>
     <%} else {%>
-    <a href="#"><%=pos["scientific_name"]%></a>
+    <a href="/plants/find_trefle/plants/<%=pos.id%>"><%=pos["scientific_name"]%></a>
     <p>(a.k.a <%= pos["common_name"]%></p>
     <%}%>
   </div>
